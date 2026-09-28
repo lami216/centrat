@@ -117,7 +117,7 @@ const RECOVERY_PREFIX='EFC-ADMIN-RECOVERY-2.';
 const RESET_PREFIX='EFC-ADMIN-RESET-2.';
 const RECOVERY_PUBLIC_SPKI_B64='MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2197SbaF4DP+rcw1WnBSN0zug5WtExTC1QsE3ciHSK7KkQ0RRpu4xxpeP7rBB2qU+dxWJ9LHXPvPyEZxknVdzH3Ctw3/Ya0UYCMuZo96z4OcIuFS6OwUC8erivt3eZ2eupUtmic3hpUoMbphIlA/xshs4alpuISGMZ/owrI8Bc3nKe1DGt1QgArlTpL7J8DhPrr92EgZLQkdERZ7Fga2x8/2LtgjBOJMem5sRWnKCZ8GK23G2s2AB414yXKD1W3NEw2S4AQfMNA9QDxjPN81QEhZPykcMaWar701Q3egnncyRkjHqVTJJ7Lj6fNZt6tCUiNsSld/VK/0iNevzj9IFwIDAQAB';
 const SESSION_KEY='efc-current-user-v13';
-const AUTH_SECTIONS=['register','specialties','period','students','certificates','finance','ledger','bank','settings'];
+const AUTH_SECTIONS=['register','specialties','period','students','certificates','finance','ledger','bank','identity','settings'];
 const invoke=window.__TAURI__?.core?.invoke;
 let securityState={users:[]},activeOverlay=null,loginPromise=null,resolveLogin=null;
 const loginFailures={count:0,blockedUntil:0};
