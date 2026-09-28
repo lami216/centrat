@@ -1,10 +1,10 @@
 (()=>{
 'use strict';
 if(window.EFC_SECURITY_UI_V13?.ready)return;
-const D=window.EFC_DOMAIN_V13,Auth=window.EFC_AUTH_BOOTSTRAP_V13;if(!D?.ready||!window.EFC_STUDENT_UI_V13?.ready||!window.EFC_FINANCE_UI_V13?.ready||!window.EFC_BANK_V22?.ready||!Auth?.ready)throw new Error('Security UI v13 loaded before v13 domain/UI/auth layers.');
+const D=window.EFC_DOMAIN_V13,Auth=window.EFC_AUTH_BOOTSTRAP_V13;if(!D?.ready||!window.EFC_STUDENT_UI_V13?.ready||!window.EFC_FINANCE_UI_V13?.ready||!window.EFC_BANK_V22?.ready||!window.EFC_IDENTITY_V1?.ready||!Auth?.ready)throw new Error('Security UI v13 loaded before v13 domain/UI/auth layers.');
 const {OFFICIAL_NAME,STORAGE,esc,normalize,uid,currentNotifications,today,cash,showDate}=D;
 const invoke=window.__TAURI__?.core?.invoke;
-const SECTIONS=[['register','تسجيل الطلاب'],['specialties','الدورات'],['period','آلية البحث'],['students','ملفات الطلاب'],['certificates','الشهادات'],['finance','المالية والمصاريف'],['ledger','اليومية'],['bank','البنك'],['settings','الإعدادات']];
+const SECTIONS=[['register','تسجيل الطلاب'],['specialties','الدورات'],['period','آلية البحث'],['students','ملفات الطلاب'],['certificates','الشهادات'],['finance','المالية والمصاريف'],['ledger','اليومية'],['bank','البنك'],['identity','الهوية'],['settings','الإعدادات']];
 const HOME_ID='home';
 const HOME_ICON='<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 9-7 9 7"/><path d="M5.5 9.5V20h13V9.5M9.5 20v-6h5v6"/></g></svg>';
 if(Array.isArray(window.navItems)&&!window.navItems.some(item=>item?.[0]===HOME_ID))window.navItems.unshift([HOME_ID,HOME_ICON,'الصفحة الرئيسية']);
@@ -117,8 +117,8 @@ openPayment=function(...args){if(D.getSecurity().users.length&&!canEdit('student
 function currentSection(){return location.hash.replace('#','')||HOME_ID;}
 function renderHome(){currentPage=HOME_ID;shell(`<section class="efc-home-v35"><img src="./efc-logo.svg" alt="EFC"><h1>${OFFICIAL_NAME}</h1></section>`);}
 window.renderHomeV35=renderHome;
-function applyPermissions(){if(!D.getSecurity().users.length)return;const page=currentSection();document.querySelectorAll('.shell nav a').forEach(link=>{const section=link.getAttribute('href')?.slice(1);if(section&&!canView(section)){link.classList.add('locked-nav-v13');link.title='هذا القسم مقفل';link.onclick=event=>{event.preventDefault();event.stopPropagation();};}});if(!canView(page)){const content=document.querySelector('.content');if(content)content.innerHTML='<div class="card locked-page-v13"><h2>🔒 هذا القسم مقفل</h2><p>الحساب الحالي لا يملك صلاحية العرض.</p></div>';return;}if(!canEdit(page)){const selectors={register:'#regFormV13 input,#regFormV13 select,#regFormV13 button',specialties:'#addSpecV13,.edit-spec-v13,#addCenterV13,.edit-center-v13',finance:'.edit-expense-v13',ledger:'#addLedgerExpenseV13',certificates:'#certIssueV13,#certAddBranchV13,#certAmountV13,#certMethodV13,#certExternalNameV13,#certExternalPhoneV13,#certExternalRegV13,#certExternalSpecV13,#certExternalBranchV13',bank:'#bankSaveV22,.bank-edit-v22,.bank-delete-v22',settings:'#createBackupProd,#restoreBackupProd,.methods-settings-v13 button'};document.querySelectorAll(selectors[page]||'x-no-match').forEach(element=>element.disabled=true);}if(!canEdit('students'))document.querySelectorAll('.pay-now,.month-pay-mm,.pay-from-detail,.one-time-pay-mm,.pay-student-v13,.pay-month-v13,.stop-student-v13').forEach(element=>element.disabled=true);if(currentUser()?.role!=='admin'&&page==='settings')document.querySelectorAll('#createBackupProd,#restoreBackupProd,.security-settings-v13 button').forEach(element=>element.disabled=true);}
-const mutationClicks={specialties:'#addSpecV13,.edit-spec-v13,#addCenterV13,.edit-center-v13',finance:'.edit-expense-v13',ledger:'#addLedgerExpenseV13',certificates:'#certIssueV13,#certAddBranchV13',bank:'#bankSaveV22,.bank-edit-v22,.bank-delete-v22',settings:'#createBackupProd,#restoreBackupProd,.methods-settings-v13 button',students:'.pay-now,.month-pay-mm,.pay-from-detail,.one-time-pay-mm,.pay-student-v13,.pay-month-v13,.stop-student-v13'};
+function applyPermissions(){if(!D.getSecurity().users.length)return;const page=currentSection();document.querySelectorAll('.shell nav a').forEach(link=>{const section=link.getAttribute('href')?.slice(1);if(section&&!canView(section)){link.classList.add('locked-nav-v13');link.title='هذا القسم مقفل';link.onclick=event=>{event.preventDefault();event.stopPropagation();};}});if(!canView(page)){const content=document.querySelector('.content');if(content)content.innerHTML='<div class="card locked-page-v13"><h2>🔒 هذا القسم مقفل</h2><p>الحساب الحالي لا يملك صلاحية العرض.</p></div>';return;}if(!canEdit(page)){const selectors={register:'#regFormV13 input,#regFormV13 select,#regFormV13 button',specialties:'#addSpecV13,.edit-spec-v13,#addCenterV13,.edit-center-v13',finance:'.edit-expense-v13',ledger:'#addLedgerExpenseV13',certificates:'#certIssueV13,#certAddBranchV13,#certAmountV13,#certMethodV13,#certExternalNameV13,#certExternalPhoneV13,#certExternalRegV13,#certExternalSpecV13,#certExternalBranchV13',bank:'#bankSaveV22,.bank-edit-v22,.bank-delete-v22',identity:'.identity-page-v1 input,.identity-page-v1 button,.identity-page-v1 select',settings:'#createBackupProd,#restoreBackupProd,.methods-settings-v13 button'};document.querySelectorAll(selectors[page]||'x-no-match').forEach(element=>element.disabled=true);}if(!canEdit('students'))document.querySelectorAll('.pay-now,.month-pay-mm,.pay-from-detail,.one-time-pay-mm,.pay-student-v13,.pay-month-v13,.stop-student-v13').forEach(element=>element.disabled=true);if(currentUser()?.role!=='admin'&&page==='settings')document.querySelectorAll('#createBackupProd,#restoreBackupProd,.security-settings-v13 button').forEach(element=>element.disabled=true);}
+const mutationClicks={specialties:'#addSpecV13,.edit-spec-v13,#addCenterV13,.edit-center-v13',finance:'.edit-expense-v13',ledger:'#addLedgerExpenseV13',certificates:'#certIssueV13,#certAddBranchV13',bank:'#bankSaveV22,.bank-edit-v22,.bank-delete-v22',identity:'.identity-page-v1 button,.identity-page-v1 input,.identity-page-v1 select',settings:'#createBackupProd,#restoreBackupProd,.methods-settings-v13 button',students:'.pay-now,.month-pay-mm,.pay-from-detail,.one-time-pay-mm,.pay-student-v13,.pay-month-v13,.stop-student-v13'};
 function activeSubviewOpen(){return Boolean(document.querySelector('.expense-history-v13,.profitability-details-v13,[data-efc-history-open-v36="1"]'));}
 document.addEventListener('click',event=>{
   const target=event.target instanceof Element?event.target:null;if(!target)return;
@@ -142,7 +142,7 @@ window.renderSettings=function(){
 };
 window.renderSettingsProd=window.renderSettings;
 
-function afterRenderV13(){document.title=OFFICIAL_NAME;window.EFC_SYNC_BRAND_V13?.();window.EFC_AUTOCOMPLETE_OFF_V13?.(document);mountUser();applyPermissions();window.EFC_SYNC_SELECTS_V19?.(document);mountBell();}
+function afterRenderV13(){document.title=OFFICIAL_NAME;window.EFC_SYNC_BRAND_V13?.();window.EFC_APPLY_IDENTITY_V1?.();window.EFC_AUTOCOMPLETE_OFF_V13?.(document);mountUser();applyPermissions();window.EFC_SYNC_SELECTS_V19?.(document);mountBell();}
 window.afterRenderV13=afterRenderV13;
 
 window.renderCurrentV13=function(){
@@ -165,6 +165,7 @@ window.renderCurrentV13=function(){
     else if(page==='finance')renderFinance();
     else if(page==='ledger')renderLedger();
     else if(page==='bank')window.EFC_RENDER_BANK_V22?.();
+    else if(page==='identity')window.EFC_RENDER_IDENTITY_V1?.();
     else if(page==='settings')renderSettings();
     else if(page==='certificates')window.EFC_RENDER_CERTIFICATES_V13?.();
     else{history.replaceState(null,'','#home');renderHome();}
