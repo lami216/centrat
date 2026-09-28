@@ -87,10 +87,11 @@ function receiptHeader(entry){
   const img=`<img src="${receiptLogo()}" alt="EFC">`;
   return`<div class="head12"><div class="contact12">${img}<div class="contactText12"><b>Tél: 48 02 84 84</b><div class="socialLine12">${whatsappIcon()}<span>32 09 86 89</span></div><div class="socialLine12 teacher12">${facebookIcon()}<span>الأستاذ محمد ديدي</span></div></div></div><div class="center12"><h1 class="title12"><span>Centre EFC</span><span>مركز</span></h1><div class="official12">للغات والمعلوماتية</div><div class="rn12"><span>Pièce N°</span><b>${receiptCode(entry)}</b><span>سند رقم</span></div></div><div class="logoOnly12">${img}</div></div>`;
 }
-function receiptBody(entry){
+function baseBankReceiptBody(entry){
   const kind=entry.type==='out'?'صرف':'دخل';
   return`${receiptHeader(entry)}<div class="bank-kind-v22 ${entry.type}">${kind}</div><div class="bank-meta-v22"><span>التاريخ: <b>${showDate(entry.date)}</b></span><span>الوقت: <b>${esc(entry.time||'—')}</b></span></div><div class="bank-row-v22 bank-amount-v22"><span>Montant</span><span class="bank-track-v22"><b>${cash(entry.amount)}</b></span><span>المبلغ</span></div><div class="bank-row-v22"><span>Libellé</span><span class="bank-track-v22"><b>${esc(entry.statement)}</b></span><span>البيان</span></div>`;
 }
+function receiptBody(entry){const html=baseBankReceiptBody(entry),apply=window.EFC_IDENTITY_APPLY_RECEIPT_V1;return typeof apply==='function'?apply('bank-receipt',html):html;}
 function receiptDocument(entry,actions=true,autoPrint=false){
   const data=JSON.stringify(entry).replace(/</g,'\\u003c');
   return`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>روسي البنك ${receiptCode(entry)}</title><style>${receiptCss()}</style></head><body><div class="bank-paper-v22">${receiptBody(entry)}</div>${actions?`<div class="bank-actions-v22"><button class="bank-print-v22" onclick="print()">طباعة</button><button class="bank-save-v22" onclick="parent.EFC_SAVE_BANK_RECEIPT_PDF_V22(BANK_ENTRY)">حفظ PDF</button></div>`:''}<script>const BANK_ENTRY=${data};${autoPrint?'setTimeout(()=>print(),250);':''}<\/script></body></html>`;
@@ -139,9 +140,10 @@ function bankPeriodReportHeader(){
   const img=`<img src="${receiptLogo()}" alt="EFC">`;
   return`<div class="head12"><div class="contact12">${img}<div class="contactText12"><b>Tél: 48 02 84 84</b><div class="socialLine12">${whatsappIcon()}<span>32 09 86 89</span></div><div class="socialLine12 teacher12">${facebookIcon()}<span>الأستاذ محمد ديدي</span></div></div></div><div class="center12"><h1 class="title12"><span>Centre EFC</span><span>مركز</span></h1><div class="official12">للغات والمعلوماتية</div><div class="tag12">إدارة البنك</div></div><div class="logoOnly12">${img}</div></div>`;
 }
-function bankPeriodReportBody(model){
+function baseBankPeriodReportBody(model){
   return`${bankPeriodReportHeader()}<div class="bank-report-title-v22">تقرير البنك</div><div class="bank-report-meta-v22"><span>تاريخ الإصدار: <b>${showDate(model.createdDate)}</b></span><span>حركات الدخل: <b>${model.incomeCount}</b></span><span>حركات الصرف: <b>${model.expenseCount}</b></span></div><div class="bank-report-period-v22"><small>الفترة</small><b>${esc(model.label)}</b></div><div class="bank-report-kpis-v22"><div class="bank-report-kpi-v22 income"><small>إجمالي الدخل</small><b>${cash(model.income)}</b><em>${model.incomeCount} حركة دخل</em></div><div class="bank-report-kpi-v22 expense"><small>إجمالي الصرف</small><b>${cash(model.expense)}</b><em>${model.expenseCount} حركة صرف</em></div><div class="bank-report-kpi-v22 balance"><small>المتبقي</small><b>${cash(model.balance)}</b><em>الدخل ناقص الصرف</em></div></div><div class="bank-report-count-v22">هذا التقرير يعرض حركات البنك المسجلة داخل الفترة المحددة فقط.</div>`;
 }
+function bankPeriodReportBody(model){const html=baseBankPeriodReportBody(model),apply=window.EFC_IDENTITY_APPLY_RECEIPT_V1;return typeof apply==='function'?apply('bank-report',html):html;}
 function bankPeriodReportDocument(model,actions=true,autoPrint=false){
   const data=JSON.stringify(model).replace(/</g,'\\u003c');
   return`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>تقرير البنك</title><style>${bankPeriodReportCss()}</style></head><body><div class="bank-report-paper-v22">${bankPeriodReportBody(model)}</div>${actions?`<div class="bank-report-actions-v22"><button class="bank-report-print-v22" onclick="print()">طباعة</button><button class="bank-report-save-v22" onclick="parent.EFC_SAVE_BANK_PERIOD_REPORT_PDF_V22(BANK_REPORT)">حفظ PDF</button></div>`:''}<script>const BANK_REPORT=${data};${autoPrint?'setTimeout(()=>print(),250);':''}<\/script></body></html>`;
@@ -214,6 +216,8 @@ function renderBank(){
   drawBankPeriod();
 }
 async function boot(){
+  window.EFC_REGISTER_RECEIPT_TEMPLATE_V1?.('bank-receipt','روسي حركة البنك',()=>({css:receiptCss(),html:baseBankReceiptBody({id:'sample',receiptNo:1,type:'in',amount:1000,statement:'حركة تجريبية',date:today(),time:'12:30'})}));
+  window.EFC_REGISTER_RECEIPT_TEMPLATE_V1?.('bank-report','روسي تقرير البنك',()=>({css:bankPeriodReportCss(),html:baseBankPeriodReportBody({label:'يوم '+showDate(today()),count:2,incomeCount:1,expenseCount:1,income:2000,expense:500,balance:1500,createdDate:today()})}));
   await loadState();
   window.EFC_REGISTER_STATE_CONTRIBUTOR?.('bank-v22',snapshot=>Object.assign(snapshot,{bankEntries:state.entries,bankTombstones:state.tombstones,bankNextReceiptNo:state.nextReceiptNo}));
   window.EFC_REGISTER_RESTORE_CONTRIBUTOR?.('bank-v22',async incoming=>{if(Array.isArray(incoming?.bankEntries)||Array.isArray(incoming?.bankTombstones)||incoming?.bankNextReceiptNo){state=mergeState(state,{bankEntries:incoming.bankEntries||[],bankTombstones:incoming.bankTombstones||[],bankNextReceiptNo:incoming.bankNextReceiptNo});await persist();}});
