@@ -1,0 +1,54 @@
+name: EFC Branch Preview Pages
+
+on:
+  push:
+    branches:
+      - fix/accounting-integrity-v21
+      - feature/certificate-manager-receipt-bank-v22
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: efc-branch-preview-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current working branch
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install frontend dependencies
+        run: npm install --no-audit --no-fund --package-lock=false
+
+      - name: Build browser preview
+        run: npm run build
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: efc-branch-preview
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy current branch preview
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,416 @@
+/* Consolidated certificate UI. Source order preserves the approved v35-v40 cascade without runtime patch scripts or observers. */
+.cert-layout-v13{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(280px,.8fr);gap:16px;margin-bottom:16px}.cert-form-v13{display:grid;gap:16px}.cert-mode-v13{display:flex;gap:5px;background:#edf1ef;border:1px solid var(--border);border-radius:9px;padding:5px;width:max-content}.cert-mode-v13 button{border:0;background:transparent;color:var(--muted);padding:8px 14px;border-radius:6px;font-size:9px;cursor:pointer}.cert-mode-v13 button.active{background:#fff;color:var(--primary);box-shadow:0 2px 7px #0000000c}.cert-results-v13{display:grid;gap:5px;margin-top:6px}.cert-student-option-v13{width:100%;border:1px solid var(--border);background:#fff;border-radius:8px;padding:9px 11px;text-align:right;cursor:pointer;color:var(--text)}.cert-student-option-v13:hover{background:var(--soft);border-color:#bcded1}.cert-student-option-v13 b,.cert-selected-v13 b{display:block;font-size:10px}.cert-student-option-v13 span,.cert-selected-v13 span{display:block;color:var(--muted);font-size:8px;margin-top:3px;line-height:1.7}.cert-empty-v13,.cert-selected-v13{padding:12px;border:1px dashed var(--border);border-radius:8px;color:var(--muted);font-size:9px}.cert-selected-v13{border-style:solid;border-color:#bcded1;background:var(--soft);color:var(--text)}.cert-private-note-v13{display:block;color:var(--muted);font-size:8px;margin-top:7px}.cert-payment-v13{padding-top:14px;border-top:1px solid var(--border)}.cert-help-v13{height:max-content}.cert-help-v13 p{color:var(--muted);font-size:9px;line-height:1.9}.cert-history-v13{padding:18px}.cert-history-row-v13{cursor:pointer}.cert-history-row-v13:hover{background:#f1f8f5}@media(max-width:1250px){.cert-layout-v13{grid-template-columns:1fr}}
+
+/* Certificate workspace follows the established EFC redesign language without changing certificate logic. */
+html body.efc-certificates-redesign-v35{font-family:"Segoe UI Variable","Segoe UI",Tahoma,Arial,sans-serif!important;background:#f5fbf9!important;overflow-x:hidden!important}
+html body.efc-certificates-redesign-v35 .shell.shell-v13{background:radial-gradient(circle at 43% 24%,#fbfffe 0,#f4faf7 54%,#edf6f2 100%)!important}
+html body.efc-certificates-redesign-v35 .shell.shell-v13 main>.content{
+  width:900px!important;max-width:900px!important;min-width:900px!important;
+  margin:0 0 0 auto!important;margin-right:22px!important;padding:18px 0 34px!important;
+  box-sizing:border-box!important;overflow:visible!important;
+}
+
+/* Same title card family as Registration / redesigned search pages; explanatory notes are intentionally removed. */
+html body.efc-certificates-redesign-v35 .page-title.efc-cert-hero-v35{
+  position:relative!important;display:flex!important;align-items:center!important;justify-content:center!important;
+  width:470px!important;min-width:470px!important;max-width:470px!important;
+  height:76px!important;min-height:76px!important;max-height:76px!important;
+  margin:0 auto 18px!important;padding:0 20px!important;border:0!important;border-radius:17px!important;
+  background:linear-gradient(135deg,#e4f8f0,#d4efe5)!important;
+  box-shadow:0 10px 30px rgba(20,102,76,.05)!important;color:#073f35!important;box-sizing:border-box!important;
+}
+html body.efc-certificates-redesign-v35 .page-title.efc-cert-hero-v35>div{
+  width:auto!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:18px!important;
+}
+html body.efc-certificates-redesign-v35 .page-title.efc-cert-hero-v35 p,
+html body.efc-certificates-redesign-v35 .page-title.efc-cert-hero-v35>div>span:not(.efc-cert-title-icon-v35){display:none!important}
+html body.efc-certificates-redesign-v35 .page-title.efc-cert-hero-v35 h1{
+  margin:0!important;font-size:31px!important;line-height:1!important;font-weight:850!important;color:#073f35!important;white-space:nowrap!important;
+}
+html body.efc-certificates-redesign-v35 .efc-cert-title-icon-v35{width:42px!important;height:42px!important;display:grid!important;place-items:center!important;color:#073f35!important;flex:0 0 42px!important}
+html body.efc-certificates-redesign-v35 .efc-cert-title-icon-v35 svg{width:42px!important;height:42px!important}
+html body.efc-certificates-redesign-v35 .page-title.efc-cert-hero-v35::after{
+  content:''!important;position:absolute!important;bottom:9px!important;left:50%!important;transform:translateX(-50%)!important;
+  width:48px!important;height:3px!important;border-radius:6px!important;background:#0a7f62!important;
+}
+
+/* Remove the explanatory/help notes; keep every operational control and field. */
+html body.efc-certificates-redesign-v35 .cert-help-v13,
+html body.efc-certificates-redesign-v35 .cert-private-note-v13{display:none!important}
+html body.efc-certificates-redesign-v35 .cert-layout-v13{
+  width:900px!important;max-width:900px!important;min-width:900px!important;
+  display:grid!important;grid-template-columns:1fr!important;gap:14px!important;margin:0 0 14px!important;
+}
+html body.efc-certificates-redesign-v35 .cert-form-v13{
+  width:900px!important;max-width:900px!important;min-width:900px!important;
+  display:grid!important;gap:14px!important;margin:0!important;padding:15px!important;
+  border:1.4px solid #4aa68c!important;border-radius:13px!important;
+  background:linear-gradient(135deg,rgba(239,251,247,.96),rgba(255,255,255,.99))!important;
+  box-shadow:0 10px 28px rgba(22,83,64,.05)!important;box-sizing:border-box!important;
+}
+html body.efc-certificates-redesign-v35 .cert-mode-v13{
+  display:flex!important;align-items:center!important;gap:6px!important;width:max-content!important;margin:0!important;padding:4px!important;
+  border:1px solid #a8c8be!important;border-radius:10px!important;background:#eef8f4!important;
+}
+html body.efc-certificates-redesign-v35 .cert-mode-v13 button{
+  height:40px!important;padding:0 18px!important;border:1px solid transparent!important;border-radius:8px!important;
+  background:transparent!important;color:#385b51!important;font-size:12px!important;font-weight:750!important;font-family:inherit!important;cursor:pointer!important;
+}
+html body.efc-certificates-redesign-v35 .cert-mode-v13 button.active{
+  background:linear-gradient(180deg,#0b755d,#08624f)!important;border-color:#08624f!important;color:#fff!important;
+  box-shadow:0 5px 12px rgba(8,98,79,.14)!important;
+}
+html body.efc-certificates-redesign-v35 .cert-form-v13 .grid.two{gap:11px 13px!important}
+html body.efc-certificates-redesign-v35 .cert-form-v13 label{
+  gap:6px!important;color:#203a33!important;font-size:11.5px!important;font-weight:750!important;
+}
+html body.efc-certificates-redesign-v35 .cert-form-v13 input,
+html body.efc-certificates-redesign-v35 .cert-form-v13 select{
+  height:44px!important;min-height:44px!important;border:1px solid #c9d8d3!important;border-radius:9px!important;background:#fff!important;
+  color:#172622!important;font-size:12px!important;font-family:inherit!important;padding:8px 12px!important;box-shadow:none!important;outline:none!important;
+}
+html body.efc-certificates-redesign-v35 .cert-form-v13 input:focus,
+html body.efc-certificates-redesign-v35 .cert-form-v13 select:focus{
+  border-color:#1b8c70!important;box-shadow:0 0 0 3px rgba(27,140,112,.10)!important;
+}
+html body.efc-certificates-redesign-v35 #certStudentSearchV13{margin-top:1px!important}
+html body.efc-certificates-redesign-v35 .cert-results-v13{display:grid!important;gap:6px!important;margin-top:7px!important}
+html body.efc-certificates-redesign-v35 .cert-student-option-v13{
+  min-height:48px!important;padding:9px 12px!important;border:1px solid #bad0c8!important;border-radius:9px!important;
+  background:#fff!important;color:#162b25!important;font-family:inherit!important;transition:background-color .12s ease,border-color .12s ease!important;
+}
+html body.efc-certificates-redesign-v35 .cert-student-option-v13:hover{background:#d7ebe4!important;border-color:#4c9c84!important}
+html body.efc-certificates-redesign-v35 .cert-student-option-v13 b,
+html body.efc-certificates-redesign-v35 .cert-selected-v13 b{font-size:11.5px!important;font-weight:850!important}
+html body.efc-certificates-redesign-v35 .cert-student-option-v13 span,
+html body.efc-certificates-redesign-v35 .cert-selected-v13 span{font-size:9.5px!important;line-height:1.5!important;color:#59736b!important}
+html body.efc-certificates-redesign-v35 .cert-empty-v13,
+html body.efc-certificates-redesign-v35 .cert-selected-v13{padding:11px 12px!important;border-radius:9px!important;font-size:10px!important}
+html body.efc-certificates-redesign-v35 .cert-selected-v13{border:1px solid #63aa95!important;background:#e8f7f1!important;color:#173d32!important}
+html body.efc-certificates-redesign-v35 #certAddBranchV13{
+  height:38px!important;padding:0 13px!important;border:1px solid #8ab9aa!important;border-radius:8px!important;background:#fff!important;color:#0b6651!important;font-size:11px!important;font-weight:800!important;font-family:inherit!important;
+}
+html body.efc-certificates-redesign-v35 .cert-payment-v13{
+  margin-top:1px!important;padding-top:13px!important;border-top:1.2px solid #9fbcb2!important;
+}
+html body.efc-certificates-redesign-v35 #certIssueV13{
+  min-height:48px!important;border:0!important;border-radius:9px!important;
+  background:linear-gradient(180deg,#08785d,#056149)!important;color:#fff!important;
+  font-size:14px!important;font-weight:850!important;font-family:inherit!important;box-shadow:0 7px 16px rgba(7,103,78,.13)!important;
+}
+html body.efc-certificates-redesign-v35 #certIssueV13:hover:not(:disabled){background:linear-gradient(180deg,#0a8668,#066a51)!important}
+html body.efc-certificates-redesign-v35 #certIssueV13:disabled{opacity:.48!important;box-shadow:none!important}
+
+/* Certificate history adopts the same card + dark-green table language as the search pages. */
+html body.efc-certificates-redesign-v35 .cert-history-v13{
+  width:900px!important;max-width:900px!important;min-width:900px!important;margin:0!important;padding:13px!important;
+  border:1.4px solid #4aa68c!important;border-radius:13px!important;background:#fff!important;
+  box-shadow:0 10px 28px rgba(22,83,64,.045)!important;box-sizing:border-box!important;
+}
+html body.efc-certificates-redesign-v35 .cert-history-v13 .section-head{
+  min-height:48px!important;margin:0 0 11px!important;padding:0 14px!important;border:0!important;border-radius:10px!important;
+  background:linear-gradient(135deg,#e8f9f3,#dff4ed)!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;
+}
+html body.efc-certificates-redesign-v35 .cert-history-v13 .section-head h2{margin:0!important;color:#124b40!important;font-size:18px!important;font-weight:850!important}
+html body.efc-certificates-redesign-v35 .cert-history-v13 .section-head>span{
+  height:30px!important;padding:0 10px!important;border:1px solid #75a9d6!important;border-radius:9px!important;
+  background:#e6f2ff!important;color:#174a71!important;display:inline-flex!important;align-items:center!important;font-size:10.5px!important;font-weight:800!important;
+}
+html body.efc-certificates-redesign-v35 .cert-history-v13 .table-wrap{
+  width:100%!important;overflow:auto!important;border:1.25px solid rgba(0,0,0,.86)!important;border-radius:10px!important;background:#fff!important;box-shadow:none!important;
+}
+html body.efc-certificates-redesign-v35 .cert-history-v13 table{
+  width:100%!important;min-width:100%!important;border-collapse:collapse!important;table-layout:auto!important;color:#111!important;background:#fff!important;font-size:10px!important;
+}
+html body.efc-certificates-redesign-v35 .cert-history-v13 th{
+  height:42px!important;padding:8px 7px!important;background:linear-gradient(180deg,#0a715b,#075846)!important;color:#fff!important;
+  border:1.25px solid rgba(0,0,0,.86)!important;text-align:center!important;vertical-align:middle!important;font-size:10px!important;font-weight:850!important;
+}
+html body.efc-certificates-redesign-v35 .cert-history-v13 td{
+  height:39px!important;padding:8px 7px!important;border:1.25px solid rgba(0,0,0,.86)!important;text-align:center!important;vertical-align:middle!important;background:#fff!important;font-size:10px!important;
+}
+html body.efc-certificates-redesign-v35 .cert-history-v13 tbody tr:nth-child(even) td{background:#fbfdfc!important}
+html body.efc-certificates-redesign-v35 .cert-history-v13 tbody tr:hover td{background:#d7ebe4!important}
+html body.efc-certificates-redesign-v35 .cert-history-v13 td small{display:block!important;margin-top:2px!important;color:#60766f!important;font-size:8.5px!important}
+
+/* Make the weekly schedule label a real, prominent section title without touching the schedule table layout. */
+html body.efc-registration-redesign-v15 .schedule-title-v13 h2{
+  font-size:31px!important;font-weight:900!important;line-height:1.08!important;letter-spacing:-.35px!important;
+  color:#0b201a!important;white-space:nowrap!important;flex:0 1 auto!important;
+}
+html body.efc-registration-redesign-v15 .schedule-title-v13 h2 span{font-size:inherit!important;font-weight:inherit!important;white-space:nowrap!important}
+html body.efc-registration-redesign-v15 .schedule-title-v13 h2 svg{width:40px!important;height:40px!important;flex:0 0 40px!important;color:#075f4c!important}
+
+@media(max-width:1180px){
+  html body.efc-certificates-redesign-v35 .shell.shell-v13 main>.content{transform:scale(.92)!important;transform-origin:top right!important}
+  html body.efc-registration-redesign-v15 .schedule-title-v13 h2{font-size:29px!important}
+}
+@media(max-width:1040px){html body.efc-certificates-redesign-v35 .shell.shell-v13 main>.content{transform:scale(.82)!important;transform-origin:top right!important}}
+
+
+/* Keep the certificate title redesigned even after the certificate runtime redraws itself. */
+html body.efc-certificates-redesign-v35 .page-title,
+html body.efc-certificates-workspace-v36 .page-title{
+  position:relative!important;display:flex!important;align-items:center!important;justify-content:center!important;
+  width:470px!important;min-width:470px!important;max-width:470px!important;height:76px!important;min-height:76px!important;max-height:76px!important;
+  margin:0 auto 18px!important;padding:0 20px!important;border:0!important;border-radius:17px!important;
+  background:linear-gradient(135deg,#e4f8f0,#d4efe5)!important;box-shadow:0 10px 30px rgba(20,102,76,.05)!important;color:#073f35!important;box-sizing:border-box!important;
+}
+html body.efc-certificates-redesign-v35 .page-title>div,
+html body.efc-certificates-workspace-v36 .page-title>div{width:auto!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:18px!important}
+html body.efc-certificates-redesign-v35 .page-title p,
+html body.efc-certificates-redesign-v35 .page-title>div>span:not(.efc-cert-title-icon-v35):not(.efc-cert-title-icon-v36),
+html body.efc-certificates-workspace-v36 .page-title p,
+html body.efc-certificates-workspace-v36 .page-title>div>span:not(.efc-cert-title-icon-v35):not(.efc-cert-title-icon-v36){display:none!important}
+html body.efc-certificates-redesign-v35 .page-title h1,
+html body.efc-certificates-workspace-v36 .page-title h1{margin:0!important;font-size:31px!important;line-height:1!important;font-weight:850!important;color:#073f35!important;white-space:nowrap!important}
+html body.efc-certificates-workspace-v36 .efc-cert-title-icon-v36{width:42px!important;height:42px!important;display:grid!important;place-items:center!important;color:#073f35!important;flex:0 0 42px!important}
+html body.efc-certificates-workspace-v36 .efc-cert-title-icon-v36 svg{width:42px!important;height:42px!important}
+html body.efc-certificates-redesign-v35 .page-title::after,
+html body.efc-certificates-workspace-v36 .page-title::after{content:''!important;position:absolute!important;bottom:9px!important;left:50%!important;transform:translateX(-50%)!important;width:48px!important;height:3px!important;border-radius:6px!important;background:#0a7f62!important}
+
+/* Registration-like fields: clear dark labels above, lighter field names/placeholders inside. */
+html body.efc-certificates-workspace-v36 .cert-form-v13 label{
+  display:flex!important;flex-direction:column!important;gap:7px!important;color:#101b18!important;font-size:13px!important;font-weight:850!important;line-height:1.2!important;
+}
+html body.efc-certificates-workspace-v36 .cert-form-v13 input,
+html body.efc-certificates-workspace-v36 .cert-form-v13 select{
+  height:48px!important;min-height:48px!important;border:1px solid #c7d5d0!important;border-radius:10px!important;background:#fff!important;
+  color:#344b44!important;font-size:13px!important;font-weight:500!important;font-family:inherit!important;padding:8px 13px!important;box-shadow:0 2px 8px rgba(11,71,54,.025)!important;outline:none!important;
+}
+html body.efc-certificates-workspace-v36 .cert-form-v13 input::placeholder{color:#9aa8a3!important;opacity:1!important;font-weight:500!important}
+html body.efc-certificates-workspace-v36 .cert-form-v13 select:invalid{color:#9aa8a3!important}
+html body.efc-certificates-workspace-v36 .cert-form-v13 input:focus,
+html body.efc-certificates-workspace-v36 .cert-form-v13 select:focus{border-color:#128264!important;box-shadow:0 0 0 3px rgba(18,130,100,.10)!important}
+
+/* One top workspace row: student type on the right, history controls opposite it. */
+html body.efc-certificates-workspace-v36 .efc-cert-workspace-toolbar-v36{
+  width:100%!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:16px!important;margin:0 0 2px!important;direction:rtl!important;
+}
+html body.efc-certificates-workspace-v36 .efc-cert-workspace-toolbar-v36 .cert-mode-v13{margin:0!important;flex:0 0 auto!important}
+html body.efc-certificates-workspace-v36 .efc-cert-history-actions-v36{display:flex!important;align-items:center!important;gap:8px!important;direction:rtl!important;flex:0 0 auto!important}
+html body.efc-certificates-workspace-v36 .efc-cert-history-filters-v36{display:flex!important;align-items:center!important;gap:7px!important;direction:rtl!important}
+html body.efc-certificates-workspace-v36 .efc-cert-history-filters-v36[hidden]{display:none!important}
+html body.efc-certificates-workspace-v36 .efc-cert-history-date-v36{
+  width:145px!important;height:40px!important;min-height:40px!important;display:flex!important;flex-direction:row!important;align-items:center!important;gap:6px!important;
+  padding:0 9px!important;border:1px solid #a8c8be!important;border-radius:8px!important;background:#fff!important;color:#183e34!important;box-sizing:border-box!important;cursor:pointer!important;
+}
+html body.efc-certificates-workspace-v36 .efc-cert-history-date-v36>span{font-size:10px!important;font-weight:850!important;color:#49665e!important;flex:0 0 auto!important}
+html body.efc-certificates-workspace-v36 .efc-cert-history-date-v36>input{
+  width:100%!important;height:38px!important;min-height:38px!important;padding:0 2px!important;border:0!important;border-radius:0!important;background:transparent!important;
+  box-shadow:none!important;color:#173d33!important;font-size:11px!important;font-weight:750!important;cursor:pointer!important;outline:none!important;
+}
+html body.efc-certificates-workspace-v36 .efc-cert-history-date-v36>input::-webkit-calendar-picker-indicator{cursor:pointer!important;opacity:.75!important}
+html body.efc-certificates-workspace-v36 .efc-cert-history-toggle-v36,
+html body.efc-certificates-workspace-v36 .efc-cert-records-toggle-v47{
+  height:40px!important;min-width:142px!important;padding:0 14px!important;border:1px solid #78a99b!important;border-radius:8px!important;
+  background:#fff!important;color:#0c604d!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;
+  font-family:inherit!important;font-size:12px!important;font-weight:850!important;cursor:pointer!important;box-shadow:none!important;
+}
+html body.efc-certificates-workspace-v36 .efc-cert-history-toggle-v36:hover,
+html body.efc-certificates-workspace-v36 .efc-cert-history-toggle-v36.active,
+html body.efc-certificates-workspace-v36 .efc-cert-records-toggle-v47:hover{background:#e4f5ef!important;border-color:#28856d!important;color:#084a3d!important;transform:translateY(-1px)!important;box-shadow:0 6px 14px rgba(12,96,77,.09)!important}
+html body.efc-certificates-workspace-v36 .efc-cert-records-toggle-v47{background:#f7fbff!important;border-color:#b9cddd!important;color:#315c73!important}
+html body.efc-certificates-workspace-v36 .efc-cert-history-toggle-v36 svg,
+html body.efc-certificates-workspace-v36 .efc-cert-records-toggle-v47 svg{width:20px!important;height:20px!important;flex:0 0 20px!important}
+
+/* In history mode only the toolbar + history remain; payment fields and issue button are forcibly hidden. */
+html body.efc-certificates-workspace-v36 .cert-form-v13[data-efc-history-open-v36="1"]>#certInternalPaneV13,
+html body.efc-certificates-workspace-v36 .cert-form-v13[data-efc-history-open-v36="1"]>#certExternalPaneV13,
+html body.efc-certificates-workspace-v36 .cert-form-v13[data-efc-history-open-v36="1"]>.cert-payment-v13,
+html body.efc-certificates-workspace-v36 .cert-form-v13[data-efc-history-open-v36="1"]>#certIssueV13{display:none!important}
+
+/* History lives inside the chooser workspace instead of below it. */
+html body.efc-certificates-workspace-v36 .cert-form-v13>.cert-history-v13{
+  width:100%!important;min-width:0!important;max-width:100%!important;margin:0!important;padding:12px!important;
+  border:1.2px solid #73aa99!important;border-radius:11px!important;background:#fff!important;box-shadow:none!important;box-sizing:border-box!important;
+}
+html body.efc-certificates-workspace-v36 .cert-form-v13>.cert-history-v13[hidden]{display:none!important}
+html body.efc-certificates-workspace-v36 .cert-form-v13>.cert-history-v13 .section-head{margin:0 0 10px!important}
+html body.efc-certificates-workspace-v36 .cert-form-v13>.cert-history-v13 .table-wrap{
+  width:100%!important;max-width:100%!important;max-height:390px!important;overflow:auto!important;overscroll-behavior:contain!important;
+  border:1.25px solid rgba(0,0,0,.86)!important;border-radius:9px!important;background:#fff!important;
+}
+html body.efc-certificates-workspace-v36 .cert-form-v13>.cert-history-v13 table{min-width:780px!important;width:100%!important;border-collapse:collapse!important}
+html body.efc-certificates-workspace-v36 .cert-form-v13>.cert-history-v13 thead th{position:sticky!important;top:0!important;z-index:2!important}
+html body.efc-certificates-workspace-v36 .cert-form-v13>.cert-history-v13 th,
+html body.efc-certificates-workspace-v36 .cert-form-v13>.cert-history-v13 td{border:1.25px solid rgba(0,0,0,.86)!important}
+html body.efc-certificates-workspace-v36 .cert-form-v13>.cert-history-v13 tbody tr[hidden]{display:none!important}
+
+@media(max-width:1180px){
+  html body.efc-certificates-workspace-v36 .cert-form-v13>.cert-history-v13 .table-wrap{max-height:340px!important}
+}
+
+
+/* Render certificate history dates as compact button-like controls instead of relying on browser-native date text layout. */
+html body.efc-certificates-workspace-v36 .efc-cert-history-date-v36{
+  position:relative!important;width:145px!important;height:40px!important;min-height:40px!important;
+  display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:center!important;gap:7px!important;
+  padding:0 11px!important;overflow:hidden!important;isolation:isolate!important;
+  border:1px solid #a8c8be!important;border-radius:8px!important;background:#fff!important;box-sizing:border-box!important;
+}
+html body.efc-certificates-workspace-v36 .efc-cert-history-date-v36 .efc-cert-history-date-caption-v37{
+  position:static!important;display:inline!important;flex:0 0 auto!important;margin:0!important;padding:0!important;
+  color:#49665e!important;font-size:10px!important;font-weight:850!important;line-height:1!important;white-space:nowrap!important;pointer-events:none!important;
+}
+html body.efc-certificates-workspace-v36 .efc-cert-history-date-v36 .efc-cert-history-date-value-v37{
+  position:static!important;display:inline!important;flex:0 0 auto!important;margin:0!important;padding:0!important;
+  color:#173d33!important;font-size:11px!important;font-weight:800!important;line-height:1!important;white-space:nowrap!important;direction:ltr!important;pointer-events:none!important;
+}
+html body.efc-certificates-workspace-v36 .efc-cert-history-date-v36>input[type="date"]{
+  position:absolute!important;inset:0!important;z-index:3!important;width:100%!important;height:100%!important;min-height:0!important;
+  margin:0!important;padding:0!important;border:0!important;border-radius:8px!important;background:transparent!important;
+  opacity:0!important;cursor:pointer!important;appearance:auto!important;-webkit-appearance:auto!important;
+}
+html body.efc-certificates-workspace-v36 .efc-cert-history-date-v36:focus-within{
+  border-color:#128264!important;box-shadow:0 0 0 3px rgba(18,130,100,.10)!important;
+}
+
+
+/* Search always comes first in the internal-student workflow. */
+html body.efc-certificates-workspace-v36 #certInternalPaneV13{display:flex!important;flex-direction:column!important;gap:12px!important}
+html body.efc-certificates-workspace-v36 #certInternalPaneV13[hidden]{display:none!important}
+html body.efc-certificates-workspace-v36 .efc-cert-student-search-v38{order:1!important;margin:0!important}
+html body.efc-certificates-workspace-v36 .efc-cert-student-filters-v38{order:2!important;margin:0!important}
+html body.efc-certificates-workspace-v36 #certStudentResultsV13{order:3!important;margin:0!important}
+html body.efc-certificates-workspace-v36 .efc-cert-student-filters-v38[hidden]{display:none!important}
+html body.efc-certificates-workspace-v36 .efc-cert-student-search-v38 input{height:50px!important;font-size:13px!important}
+
+/* Selected student becomes a clear, larger summary instead of a thin result strip. */
+html body.efc-certificates-workspace-v36 .efc-cert-selected-card-v38{
+  position:relative!important;display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;gap:18px!important;
+  min-height:128px!important;padding:18px 20px!important;border:1.4px solid #4b9f87!important;border-radius:12px!important;
+  background:linear-gradient(135deg,#e9f8f3,#dff2ec)!important;color:#122d26!important;box-sizing:border-box!important;
+}
+html body.efc-certificates-workspace-v36 .efc-cert-selected-main-v38{display:grid!important;gap:9px!important;min-width:0!important}
+html body.efc-certificates-workspace-v36 .efc-cert-selected-kicker-v38{font-size:10px!important;font-weight:800!important;color:#5d756e!important;line-height:1!important}
+html body.efc-certificates-workspace-v36 .efc-cert-selected-main-v38>strong{font-size:22px!important;font-weight:900!important;color:#073f35!important;line-height:1.15!important}
+html body.efc-certificates-workspace-v36 .efc-cert-selected-facts-v38{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important}
+html body.efc-certificates-workspace-v36 .efc-cert-selected-facts-v38>span{
+  min-height:50px!important;padding:7px 9px!important;border:1px solid #bdd8cf!important;border-radius:9px!important;background:rgba(255,255,255,.78)!important;
+  display:flex!important;flex-direction:column!important;justify-content:center!important;gap:3px!important;min-width:0!important;
+}
+html body.efc-certificates-workspace-v36 .efc-cert-selected-facts-v38 small{font-size:9px!important;font-weight:750!important;color:#72877f!important;line-height:1!important}
+html body.efc-certificates-workspace-v36 .efc-cert-selected-facts-v38 b{font-size:11.5px!important;font-weight:850!important;color:#172f29!important;line-height:1.25!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+html body.efc-certificates-workspace-v36 .efc-cert-cancel-student-v38{
+  height:42px!important;min-width:126px!important;padding:0 13px!important;border:1px solid #a46262!important;border-radius:9px!important;background:#fff!important;color:#8b3030!important;
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:7px!important;font-family:inherit!important;font-size:11.5px!important;font-weight:850!important;cursor:pointer!important;
+}
+html body.efc-certificates-workspace-v36 .efc-cert-cancel-student-v38:hover{background:#fff1f1!important;border-color:#8c3a3a!important}
+html body.efc-certificates-workspace-v36 .efc-cert-cancel-student-v38 svg{width:17px!important;height:17px!important;flex:0 0 17px!important}
+
+@media(max-width:1180px){
+  html body.efc-certificates-workspace-v36 .efc-cert-selected-facts-v38{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+
+
+/* Internal certificate chooser: controls stay on the right half, results get a fixed left workspace. */
+html body.efc-certificates-workspace-v36 #certInternalPaneV13{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+  grid-template-rows:auto auto!important;
+  column-gap:14px!important;
+  row-gap:10px!important;
+  align-items:start!important;
+  direction:ltr!important;
+  min-height:244px!important;
+}
+html body.efc-certificates-workspace-v36 #certInternalPaneV13[hidden]{display:none!important}
+html body.efc-certificates-workspace-v36 .efc-cert-student-search-v38{
+  grid-column:2!important;grid-row:1!important;order:unset!important;width:100%!important;min-width:0!important;margin:0!important;direction:rtl!important;
+}
+html body.efc-certificates-workspace-v36 .efc-cert-student-filters-v38{
+  grid-column:2!important;grid-row:2!important;order:unset!important;width:100%!important;min-width:0!important;margin:0!important;direction:rtl!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;align-self:start!important;
+}
+html body.efc-certificates-workspace-v36 .efc-cert-student-filters-v38[hidden]{display:none!important}
+html body.efc-certificates-workspace-v36 #certStudentResultsV13{
+  grid-column:1!important;grid-row:1 / 3!important;order:unset!important;
+  width:100%!important;min-width:0!important;height:244px!important;min-height:244px!important;max-height:244px!important;
+  margin:0!important;padding:8px!important;border:1.2px solid #b7d1c8!important;border-radius:11px!important;
+  background:rgba(255,255,255,.82)!important;box-sizing:border-box!important;
+  overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;
+  display:grid!important;grid-auto-rows:max-content!important;align-content:start!important;gap:7px!important;direction:rtl!important;
+  scrollbar-gutter:stable!important;
+}
+html body.efc-certificates-workspace-v36 #certStudentResultsV13 .cert-empty-v13{
+  min-height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;
+  padding:18px!important;border:1px dashed #c9d9d4!important;background:#f8fcfa!important;color:#7b8d87!important;box-sizing:border-box!important;
+}
+html body.efc-certificates-workspace-v36 #certStudentResultsV13 .cert-student-option-v13{
+  width:100%!important;min-height:54px!important;flex:0 0 auto!important;
+}
+html body.efc-certificates-workspace-v36 #certStudentResultsV13 .efc-cert-selected-card-v38{
+  width:100%!important;height:100%!important;min-height:100%!important;max-height:100%!important;margin:0!important;
+  align-self:stretch!important;box-sizing:border-box!important;overflow:hidden!important;
+}
+html body.efc-certificates-workspace-v36 #certStudentResultsV13 .efc-cert-selected-main-v38{align-content:center!important}
+html body.efc-certificates-workspace-v36 #certStudentResultsV13 .efc-cert-selected-facts-v38{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+
+/* After selection the filter area disappears, while search remains in the same right-hand position. */
+html body.efc-certificates-workspace-v36 #certInternalPaneV13.efc-cert-has-selected-v38{
+  grid-template-rows:auto 1fr!important;
+}
+html body.efc-certificates-workspace-v36 #certInternalPaneV13.efc-cert-has-selected-v38 .efc-cert-student-search-v38{
+  grid-column:2!important;grid-row:1!important;
+}
+html body.efc-certificates-workspace-v36 #certInternalPaneV13.efc-cert-has-selected-v38 #certStudentResultsV13{
+  grid-column:1!important;grid-row:1 / 3!important;
+}
+
+@media(max-width:1180px){
+  html body.efc-certificates-workspace-v36 #certStudentResultsV13{height:224px!important;min-height:224px!important;max-height:224px!important}
+  html body.efc-certificates-workspace-v36 #certInternalPaneV13{min-height:224px!important}
+}
+
+
+/* Give the results list more vertical room while keeping every internal control in the right half. */
+html body.efc-certificates-workspace-v36 #certInternalPaneV13{
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+  grid-template-rows:auto minmax(78px,auto) auto auto!important;
+  column-gap:14px!important;row-gap:10px!important;min-height:356px!important;
+}
+html body.efc-certificates-workspace-v36 .efc-cert-student-search-v38{grid-column:2!important;grid-row:1!important}
+html body.efc-certificates-workspace-v36 .efc-cert-student-filters-v38{grid-column:2!important;grid-row:2!important}
+html body.efc-certificates-workspace-v36 .efc-cert-selected-host-v40{
+  grid-column:2!important;grid-row:2!important;width:100%!important;min-width:0!important;margin:0!important;direction:rtl!important;
+}
+html body.efc-certificates-workspace-v36 .efc-cert-selected-host-v40[hidden]{display:none!important}
+html body.efc-certificates-workspace-v36 .efc-cert-selected-host-v40 .efc-cert-selected-main-v38{display:grid!important;gap:8px!important;min-width:0!important}
+html body.efc-certificates-workspace-v36 .efc-cert-selected-host-v40 .efc-cert-selected-card-v38,
+html body.efc-certificates-workspace-v36 .efc-cert-selected-host-v40{
+  min-height:124px!important;padding:15px 16px!important;border:1.4px solid #4b9f87!important;border-radius:11px!important;
+  background:linear-gradient(135deg,#e9f8f3,#dff2ec)!important;color:#122d26!important;box-sizing:border-box!important;
+}
+html body.efc-certificates-workspace-v36 .efc-cert-selected-host-v40 .efc-cert-selected-main-v38>strong{font-size:20px!important;font-weight:900!important;color:#073f35!important}
+html body.efc-certificates-workspace-v36 .efc-cert-selected-host-v40 .efc-cert-selected-facts-v38{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important;margin-top:7px!important}
+html body.efc-certificates-workspace-v36 .efc-cert-selected-host-v40 .efc-cert-selected-facts-v38>span{min-height:43px!important;padding:6px 8px!important;border:1px solid #bdd8cf!important;border-radius:8px!important;background:rgba(255,255,255,.78)!important;display:flex!important;flex-direction:column!important;justify-content:center!important;gap:3px!important}
+html body.efc-certificates-workspace-v36 .efc-cert-selected-host-v40 .efc-cert-cancel-student-v38{margin-top:9px!important;height:38px!important;min-width:118px!important}
+
+/* Keep the original selected node only as state/source; the visible summary lives below search where filters were. */
+html body.efc-certificates-workspace-v36 #certStudentResultsV13 .efc-cert-selected-source-v40{display:none!important}
+html body.efc-certificates-workspace-v36 #certStudentResultsV13{
+  grid-column:1!important;grid-row:1 / 5!important;height:356px!important;min-height:356px!important;max-height:356px!important;
+}
+html body.efc-certificates-workspace-v36 #certStudentResultsV13.efc-cert-results-selected-v40{background:rgba(255,255,255,.82)!important}
+
+/* Payment becomes compact like the filters above it and occupies only the right half. */
+html body.efc-certificates-workspace-v36 #certInternalPaneV13>.cert-payment-v13.efc-cert-internal-payment-v40{
+  grid-column:2!important;grid-row:3!important;width:100%!important;min-width:0!important;max-width:100%!important;margin:0!important;padding:0!important;
+  border-top:0!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;align-self:start!important;direction:rtl!important;
+}
+html body.efc-certificates-workspace-v36 #certInternalPaneV13>.cert-payment-v13.efc-cert-internal-payment-v40 label{min-width:0!important;margin:0!important}
+html body.efc-certificates-workspace-v36 #certInternalPaneV13>.cert-payment-v13.efc-cert-internal-payment-v40 input,
+html body.efc-certificates-workspace-v36 #certInternalPaneV13>.cert-payment-v13.efc-cert-internal-payment-v40 select{width:100%!important;min-width:0!important;height:46px!important;min-height:46px!important}
+html body.efc-certificates-workspace-v36 #certInternalPaneV13>#certIssueV13.efc-cert-internal-issue-v40{
+  grid-column:2!important;grid-row:4!important;width:100%!important;min-width:0!important;max-width:100%!important;margin:0!important;min-height:46px!important;height:46px!important;align-self:start!important;
+}
+
+/* Do not let v39 move the selected summary back into the left results panel. */
+html body.efc-certificates-workspace-v36 #certInternalPaneV13.efc-cert-has-selected-v38 #certStudentResultsV13{grid-column:1!important;grid-row:1 / 5!important}
+html body.efc-certificates-workspace-v36 #certInternalPaneV13.efc-cert-has-selected-v38 .efc-cert-student-search-v38{grid-column:2!important;grid-row:1!important}
+
+@media(max-width:1180px){
+  html body.efc-certificates-workspace-v36 #certInternalPaneV13{min-height:330px!important}
+  html body.efc-certificates-workspace-v36 #certStudentResultsV13{height:330px!important;min-height:330px!important;max-height:330px!important}
+}

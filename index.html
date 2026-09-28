@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ar" dir="rtl" class="efc-booting">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0d3558" />
+  <title>مركز EFC للغات والمعلوماتية</title>
+  <link rel="stylesheet" href="./assets/production-ui-v13.css?v=20260928-certificate-delivery-arabic-pdf-1" />
+  <link rel="stylesheet" href="./assets/production-certificates-ui-v13.css?v=20260928-certificate-delivery-arabic-pdf-1" />
+  <link rel="stylesheet" href="./assets/production-home-background-v36.css?v=20260928-certificate-delivery-arabic-pdf-1&rev=20260914-responsive-1" />
+  <style>
+    html.efc-booting #app{visibility:hidden}
+    body{min-width:840px}
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script>
+    (()=>{
+      'use strict';
+      let closeRequestBusy=false;
+      window.EFC_REQUEST_CLOSE_BACKUP=async()=>{
+        if(closeRequestBusy)return;
+        const editApi=window.EFC_REGISTRATION_EDIT_V17,certificateEditApi=window.EFC_CERTIFICATE_EDIT_V44;
+        if((editApi?.active?.()||certificateEditApi?.active?.())&&!window.confirm('لديك تعديلات غير محفوظة. إغلاق البرنامج سيلغي التغييرات الحالية فقط. هل تريد المتابعة؟'))return;
+        const invoke=window.__TAURI__?.core?.invoke;
+        if(!invoke)return;
+        closeRequestBusy=true;
+        try{
+          const wantsBackup=window.confirm('هل تريد إنشاء نسخة احتياطية قبل إغلاق البرنامج؟');
+          if(wantsBackup){
+            await window.EFC_FORCE_PERSIST?.();
+            const now=new Date();
+            const pad=value=>String(value).padStart(2,'0');
+            const stamp=`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+            const path=await invoke('export_backup',{suggestedName:`EFC-Backup-${stamp}.json`});
+            if(!path){closeRequestBusy=false;return;}
+          }
+          await invoke('exit_app');
+        }catch(error){
+          closeRequestBusy=false;
+          window.alert(String(error?.message||error||'تعذر إنشاء النسخة الاحتياطية.'));
+        }
+      };
+    })();
+  </script>
+  <script src="./assets/production-license-gate-v8.js?v=20260928-certificate-delivery-arabic-pdf-1" defer></script>
+  <script src="./assets/production-accounting-integrity-v21.js?v=20260928-certificate-delivery-arabic-pdf-1" defer></script>
+</body>
+</html>

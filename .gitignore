@@ -1,0 +1,8 @@
+node_modules/
+dist/
+src-tauri/target/
+tools/license-generator/target/
+*.pem
+*.key
+*.jwk
+*.efc-license

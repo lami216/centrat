@@ -1,0 +1,34 @@
+name: Verify license branch
+
+on:
+  push:
+    branches: [certificate-filters-license-v8, html-license-generator-v9, license-v2-receipt-sequences-v10, feature/center-ops-v11, fix/center-ops-v11-runtime, refactor/runtime-core-v12, refactor/clean-runtime-v13, refactor/legacy-extraction-v13]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund --package-lock=false
+      - name: Generate icons
+        run: npm run icons
+      - name: Verify production source
+        run: npm run check
+      - name: Verify HTML activation generator
+        run: node scripts/verify-license-generator-html.mjs
+      - name: Build frontend
+        run: npm run build
+      - name: Check EFC Rust
+        run: cargo check --manifest-path src-tauri/Cargo.toml
+      - name: Test EFC license verifier
+        run: cargo test --manifest-path src-tauri/Cargo.toml license::tests --no-fail-fast
+      - name: Check legacy activation generator source
+        run: cargo check --manifest-path tools/license-generator/Cargo.toml

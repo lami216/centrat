@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="efcLoginGreen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1c8f6b" stop-opacity=".70"/>
+      <stop offset="1" stop-color="#5dbe9d" stop-opacity=".33"/>
+    </linearGradient>
+  </defs>
+  <g transform="rotate(35 -6 716)">
+    <rect x="-176" y="446" width="340" height="540" rx="42" ry="42" fill="url(#efcLoginGreen)"/>
+  </g>
+  <g transform="rotate(35 147 878)">
+    <rect x="42" y="668" width="210" height="420" rx="42" ry="42" fill="#57b293" fill-opacity=".26"/>
+  </g>
+  <g transform="rotate(35 1045 887)">
+    <rect x="965" y="742" width="160" height="290" rx="42" ry="42" fill="#5ab897" fill-opacity=".20"/>
+  </g>
+  <g transform="rotate(35 1451 845)">
+    <rect x="1336" y="650" width="230" height="390" rx="42" ry="42" fill="#ffffff" fill-opacity=".46" stroke="#e7b60d" stroke-width="1.5"/>
+  </g>
+</svg>

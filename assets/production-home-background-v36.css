@@ -1,0 +1,18 @@
+/* Reuse the login page background exactly; keep the sidebar and page content unchanged. */
+html,body{height:100%;overflow:hidden!important;overscroll-behavior:none!important;overscroll-behavior-y:none!important}
+html body{position:relative;isolation:isolate;background:radial-gradient(circle at 52% 36%,#effaf6 0,#f7fbf9 35%,#edf7f3 70%,#f7faf9 100%)!important}
+html body::before{content:"";position:fixed;inset:0;z-index:0;background:linear-gradient(130deg,transparent 0 12%,rgba(116,198,170,.08) 12% 26%,transparent 26% 60%,rgba(111,195,166,.07) 60% 76%,transparent 76%);pointer-events:none}
+html body::after{content:"";position:fixed;inset:0;z-index:0;background:url('./efc-login-geometry-v15.svg') left top/100vw 100vh no-repeat;pointer-events:none}
+html body #app{height:100dvh;overflow:hidden!important}
+html body .shell.shell-v13{--efc-shared-bg-sidebar:clamp(230px,18vw,268px);position:relative!important;z-index:1!important;height:100dvh!important;min-height:100dvh!important;overflow:hidden!important;background:transparent!important}
+@media(max-width:1260px){html body .shell.shell-v13{--efc-shared-bg-sidebar:230px}}
+@media(max-width:1080px){html body .shell.shell-v13{--efc-shared-bg-sidebar:218px}}
+html body .shell.shell-v13 main{position:relative!important;isolation:isolate!important;height:100dvh!important;overflow-x:hidden!important;overflow-y:auto!important;overscroll-behavior:none!important;overscroll-behavior-y:none!important;background:transparent!important}
+html body .shell.shell-v13 main::before{content:""!important;position:absolute!important;inset:0!important;z-index:0!important;background:transparent!important;pointer-events:none!important}
+html body .shell.shell-v13 main::after{content:""!important;position:absolute!important;top:-110px!important;right:calc(72px - var(--efc-shared-bg-sidebar))!important;z-index:0!important;width:360px!important;height:420px!important;border-radius:0 0 68px 68px!important;background:linear-gradient(160deg,rgba(157,222,200,.35),rgba(98,181,151,.18))!important;transform:skewX(-20deg)!important;pointer-events:none!important}
+html body .shell.shell-v13 main>.content{position:relative!important;z-index:1!important;height:auto!important;min-height:100%!important;overflow:visible!important;background:transparent!important}
+html body .shell.shell-v13 main>.content:has(.efc-home-v35){height:100%!important;min-height:100%!important;overflow:hidden!important}
+
+html body .efc-home-v35{height:100%!important;min-height:0!important;padding:18px 26px!important;overflow:hidden!important}
+html body .efc-home-v35 img{content:url('./efc-home-brand.webp')!important;display:block!important;width:clamp(420px,47vw,580px)!important;height:auto!important;max-width:calc(100vw - var(--efc-shared-bg-sidebar) - 130px)!important;max-height:calc(100dvh - 140px)!important;object-fit:contain!important;border-radius:28px!important;filter:none!important;overflow:hidden!important;mix-blend-mode:multiply!important}
+html body .efc-home-v35 h1{display:none!important}
