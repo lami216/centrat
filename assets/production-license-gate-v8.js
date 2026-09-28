@@ -7,6 +7,7 @@ const RUNTIME=[
   './production-loader.js',
   './assets/production-auth-bootstrap-v13.js',
   './assets/production-foundation-v13.js',
+  './assets/production-identity-v1.js',
   './assets/production-receipts-v13.js',
   './assets/production-certificates-v13.js',
   './assets/production-domain-v13.js',
@@ -30,7 +31,7 @@ const RUNTIME=[
 ];
 const BOOTSTRAP_RUNTIME=RUNTIME.slice(0,2);
 const APP_RUNTIME=RUNTIME.slice(2);
-const RUNTIME_VERSION='20260928-certificate-delivery-arabic-pdf-1';
+const RUNTIME_VERSION='20260928-identity-editor-v1-1';
 const invoke=window.__TAURI__?.core?.invoke;
 const app=document.getElementById('app');
 let startPromise=null,started=false,watchTimer=null,overlay=null,busy=false,deviceId='';
@@ -61,6 +62,7 @@ async function startApplication(){
     preloadRuntime(APP_RUNTIME,'efcAppPreloaded');
 
     await loadStage('./assets/production-foundation-v13.js','الواجهة الأساسية',()=>window.EFC_FOUNDATION_V13?.ready&&typeof shell==='function');
+    await loadStage('./assets/production-identity-v1.js','الهوية',()=>window.EFC_IDENTITY_V1?.ready);
     await loadStage('./assets/production-receipts-v13.js','خدمة الإيصالات',()=>window.EFC_RECEIPTS_V13?.ready&&typeof receiptModelV4==='function');
     await loadStage('./assets/production-certificates-v13.js','الشهادات',()=>window.EFC_CERTIFICATES_V13?.ready);
     await loadScript('./assets/production-domain-v13.js');
