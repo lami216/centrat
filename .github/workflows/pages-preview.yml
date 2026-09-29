@@ -1,4 +1,4 @@
-name: Branch Preview
+name: Centrat Branch Preview
 
 on:
   push:
