@@ -29,7 +29,7 @@ for(const token of [
   'noCertificateDomObserver:true',
   'noCertificateReloadPatch:true',
   'legacyReceiptPrefixesRemoved:true',
-  "const IDENTITY_KEY='efc-identity-sequences-v11'",
+  "const IDENTITY_KEY='centrat-identity-sequences-v11'",
   'generalReceiptNext:1',
   'registrationLastByScope:{}',
   'function allocateRegistrationNumber(branch,specialty)',
