@@ -23,7 +23,7 @@ const LICENSE_ALGORITHM: &str = "ECDSA_P256_SHA256";
 const LICENSE_FILE_NAME: &str = "license.efc-license";
 const STATE_FILE_NAME: &str = "state-v1.json";
 const STATE_FORMAT: &str = "efc-license-state-v1";
-const REGISTRY_KEY: &str = r"HKCU\Software\Centre EFC\Licensing\v1";
+const REGISTRY_KEY: &str = r"HKCU\Software\Centrat\Licensing\v1";
 const REGISTRY_VALUE: &str = "State";
 const ROLLBACK_TOLERANCE_MS: u64 = 120_000;
 const MAX_LICENSE_BYTES: usize = 64 * 1024;
@@ -133,7 +133,7 @@ fn licensing_dir() -> Result<PathBuf, String> {
     let root = env::var_os("LOCALAPPDATA")
         .map(PathBuf::from)
         .ok_or_else(|| "تعذر تحديد مجلد بيانات Windows المحلي.".to_string())?;
-    let dir = root.join("Centre-EFC").join("Licensing");
+    let dir = root.join("Centrat").join("Licensing");
     fs::create_dir_all(&dir).map_err(|e| format!("تعذر إنشاء مجلد التفعيل: {e}"))?;
     Ok(dir)
 }
@@ -193,7 +193,7 @@ fn format_device_code(guid: &str) -> Result<String, String> {
     if normalized.is_empty() {
         return Err("تعذر استخراج رقم الجهاز. تواصل مع الدعم.".to_string());
     }
-    let digest = Sha256::digest(format!("mr.efc.centre|device-v1|{normalized}"));
+    let digest = Sha256::digest(format!("mr.centrat.desktop|device-v1|{normalized}"));
     let hex = digest[..10]
         .iter()
         .map(|byte| format!("{byte:02X}"))
@@ -280,7 +280,7 @@ fn empty_ledger(device: &str) -> Ledger {
 }
 
 fn state_key(device: &str) -> Vec<u8> {
-    Sha256::digest(format!("Centre-EFC|licensing-state-v1|{device}"))
+    Sha256::digest(format!("Centrat|licensing-state-v1|{device}"))
         .to_vec()
 }
 
