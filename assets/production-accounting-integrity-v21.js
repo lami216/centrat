@@ -3,7 +3,7 @@
 if(window.EFC_ACCOUNTING_INTEGRITY_V21?.ready)return;
 
 const VERSION=21;
-const STORAGE_KEY='efc-accounting-integrity-v21';
+const STORAGE_KEY='centrat-accounting-integrity-v21';
 const SNAPSHOT_INDEX=12;
 const MAX_AUDIT=600;
 const invoke=window.__TAURI__?.core?.invoke;
