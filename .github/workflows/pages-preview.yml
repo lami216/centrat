@@ -1,4 +1,4 @@
-name: EFC Branch Preview Pages
+name: Branch Preview
 
 on:
   push:
@@ -14,12 +14,14 @@ permissions:
   id-token: write
 
 concurrency:
-  group: efc-branch-preview-pages
+  group: centrat-branch-preview-pages
   cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      pages_enabled: ${{ steps.pages_status.outputs.enabled }}
     steps:
       - name: Checkout current working branch
         uses: actions/checkout@v6
@@ -35,16 +37,39 @@ jobs:
       - name: Build browser preview
         run: npm run build
 
+      - name: Detect GitHub Pages configuration
+        id: pages_status
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh api "repos/${GITHUB_REPOSITORY}/pages" >/dev/null 2>&1; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "GitHub Pages is not enabled for this new repository yet; keeping the preview as an Actions artifact."
+          fi
+
+      - name: Upload browser preview artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: centrat-browser-preview
+          path: dist
+          if-no-files-found: error
+
       - name: Configure GitHub Pages
+        if: steps.pages_status.outputs.enabled == 'true'
         uses: actions/configure-pages@v5
 
       - name: Upload GitHub Pages artifact
+        if: steps.pages_status.outputs.enabled == 'true'
         uses: actions/upload-pages-artifact@v4
         with:
           path: dist
 
   deploy:
     needs: build
+    if: needs.build.outputs.pages_enabled == 'true'
     runs-on: ubuntu-latest
     environment:
       name: efc-branch-preview
