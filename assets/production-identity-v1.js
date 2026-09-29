@@ -21,6 +21,19 @@ const defaults=()=>({
     whatsapp:'32 09 86 89',
     teacher:'الأستاذ محمد ديدي'
   },
+  navigation:{
+    home:'الصفحة الرئيسية',
+    register:'تسجيل طالب',
+    specialties:'الدورات و المراكز',
+    period:'آلية البحث',
+    students:'البحث عن طالب',
+    certificates:'الشهادات',
+    finance:'المالية',
+    ledger:'اليومية',
+    bank:'البنك',
+    identity:'الهوية',
+    settings:'الإعدادات'
+  },
   theme:{
     primary:'#08634f',
     primaryDark:'#005849',
@@ -159,6 +172,8 @@ function applyIdentity(){
   document.querySelectorAll('.shell-v13 .brand .logo img').forEach(img=>img.src=logo);
   document.querySelectorAll('.shell-v13 .brand b').forEach(node=>node.innerHTML=`<span>${esc(b.line1)}</span><span>${esc(b.line2)}</span>`);
   document.querySelectorAll('.shell-v13 .brand small').forEach(node=>node.textContent=b.sidebarSubtitle||'');
+  const navigation=state.navigation||{};if(Array.isArray(window.navItems))window.navItems.forEach(item=>{if(item?.[0]&&navigation[item[0]])item[2]=navigation[item[0]];});
+  document.querySelectorAll('.shell-v13 nav a[href^="#"]').forEach(link=>{const id=link.getAttribute('href')?.slice(1),span=link.querySelector('span');if(id&&span&&navigation[id])span.textContent=navigation[id];});
   document.querySelectorAll('.efc-home-v35 img').forEach(img=>img.src=home);
   document.querySelectorAll('.efc-home-v35 h1').forEach(node=>node.textContent=b.appName||'');
   try{const win=window.__TAURI__?.window?.getCurrentWindow?.();if(win?.setTitle)Promise.resolve(win.setTitle(b.appName||'')).catch(()=>{});if(state.images.appIcon&&win?.setIcon){const bytes=dataUrlBytes(state.images.appIcon);if(bytes)Promise.resolve(win.setIcon(bytes)).catch(()=>{});}}catch{}
@@ -180,10 +195,11 @@ function imageRow(key,label,fallback){
   return `<div class="identity-image-row-v1" data-image-key="${key}"><img src="${esc(src)}" alt=""><div><b>${esc(label)}</b><small style="display:block;color:#71817b;margin-top:4px">${hint}</small></div><div><label class="button secondary" style="display:inline-flex;align-items:center;cursor:pointer">اختيار<input type="file" accept="${accept}" hidden></label><button type="button" class="button secondary clear-image-v1">إزالة</button></div></div>`;
 }
 function globalPanel(){
-  const b=state.brand,t=state.theme;
+  const b=state.brand,t=state.theme,n=state.navigation||{};
   const field=(key,label)=>`<label>${label}<input type="text" name="${key}" value="${esc(b[key]||'')}"></label>`;
+  const navField=(key,label)=>`<label>${label}<input type="text" data-nav-name="${key}" value="${esc(n[key]||'')}"></label>`;
   const color=(key,label)=>`<label>${label}<input type="color" name="${key}" value="${esc(t[key]||'#000000')}"></label>`;
-  return `<div class="identity-grid-v1"><section class="identity-card-v1"><h2>اسم وهوية التطبيق</h2><div class="fields">${field('appName','اسم التطبيق')}${field('line1','السطر الأول في أعلى القائمة')}${field('line2','السطر الثاني في أعلى القائمة')}${field('sidebarSubtitle','الوصف تحت الاسم')}${field('receiptCenterEn','اسم المركز بالفرنسية في الروسي')}${field('receiptCenterAr','اسم المركز بالعربية في الروسي')}${field('receiptOfficial','الوصف الرسمي في الروسي')}${field('receiptTag','السطر التعريفي في الروسي')}${field('phone','الهاتف')}${field('whatsapp','واتساب')}${field('teacher','اسم المسؤول / فيسبوك')}</div></section><section class="identity-card-v1"><h2>الألوان</h2><div class="identity-color-grid-v1">${color('primary','اللون الرئيسي')}${color('primaryDark','لون القائمة')}${color('accent','لون التحديد')}${color('page','خلفية الصفحات')}${color('card','البطاقات')}${color('text','النص الرئيسي')}${color('muted','النص الثانوي')}${color('success','النجاح')}${color('danger','التنبيه')}${color('warning','التحذير')}</div></section><section class="identity-card-v1" style="grid-column:1/-1"><h2>الصور والأيقونات</h2>${imageRow('logo','شعار المركز','./efc-logo.svg')}${imageRow('home','صورة الصفحة الرئيسية',state.images.logo||'./efc-logo.svg')}${imageRow('appIcon','أيقونة التطبيق',state.images.logo||'./efc-logo.svg')}<div class="identity-help-v1">أيقونة التطبيق تغيّر أيقونة نافذة البرنامج أثناء التشغيل مع الاسم في شريط العنوان. أيقونة ملف EXE وملف التثبيت نفسه تُحسم وقت البناء، لذلك لا يمكن تبديلها من داخل برنامج مُثبت بدون إعادة بناء النسخة.</div><div class="identity-actions-v1"><button class="button" id="identitySaveV1">حفظ الهوية</button><button class="button secondary" id="identityResetV1">استعادة القيم الأصلية</button></div></section></div>`;
+  return `<div class="identity-grid-v1"><section class="identity-card-v1"><h2>اسم وهوية التطبيق</h2><div class="fields">${field('appName','اسم التطبيق')}${field('line1','السطر الأول في أعلى القائمة')}${field('line2','السطر الثاني في أعلى القائمة')}${field('sidebarSubtitle','الوصف تحت الاسم')}${field('receiptCenterEn','اسم المركز بالفرنسية في الروسي')}${field('receiptCenterAr','اسم المركز بالعربية في الروسي')}${field('receiptOfficial','الوصف الرسمي في الروسي')}${field('receiptTag','السطر التعريفي في الروسي')}${field('phone','الهاتف')}${field('whatsapp','واتساب')}${field('teacher','اسم المسؤول / فيسبوك')}</div></section><section class="identity-card-v1"><h2>أسماء القوائم</h2><div class="fields">${navField('home','الصفحة الرئيسية')}${navField('register','تسجيل الطالب')}${navField('specialties','الدورات والمراكز')}${navField('period','آلية البحث')}${navField('students','البحث عن طالب')}${navField('certificates','الشهادات')}${navField('finance','المالية')}${navField('ledger','اليومية')}${navField('bank','البنك')}${navField('identity','الهوية')}${navField('settings','الإعدادات')}</div></section><section class="identity-card-v1"><h2>الألوان</h2><div class="identity-color-grid-v1">${color('primary','اللون الرئيسي')}${color('primaryDark','لون القائمة')}${color('accent','لون التحديد')}${color('page','خلفية الصفحات')}${color('card','البطاقات')}${color('text','النص الرئيسي')}${color('muted','النص الثانوي')}${color('success','النجاح')}${color('danger','التنبيه')}${color('warning','التحذير')}</div></section><section class="identity-card-v1" style="grid-column:1/-1"><h2>الصور والأيقونات</h2>${imageRow('logo','شعار المركز','./efc-logo.svg')}${imageRow('home','صورة الصفحة الرئيسية',state.images.logo||'./efc-logo.svg')}${imageRow('appIcon','أيقونة التطبيق',state.images.logo||'./efc-logo.svg')}<div class="identity-help-v1">أيقونة التطبيق تغيّر أيقونة نافذة البرنامج أثناء التشغيل مع الاسم في شريط العنوان. أيقونة ملف EXE وملف التثبيت نفسه تُحسم وقت البناء، لذلك لا يمكن تبديلها من داخل برنامج مُثبت بدون إعادة بناء النسخة.</div><div class="identity-actions-v1"><button class="button" id="identitySaveV1">حفظ الهوية</button><button class="button secondary" id="identityResetV1">استعادة القيم الأصلية</button></div></section></div>`;
 }
 function receiptsPanel(){
   const items=[...receiptRegistry.values()];
@@ -198,9 +214,10 @@ function bindGlobal(){
   });
   page.querySelector('#identitySaveV1').onclick=()=>{
     page.querySelectorAll('input[name]').forEach(input=>{if(input.type==='color')state.theme[input.name]=input.value;else state.brand[input.name]=input.value.trim();});
+    page.querySelectorAll('[data-nav-name]').forEach(input=>{state.navigation[input.dataset.navName]=input.value.trim();});
     persist();alert('تم حفظ الهوية.');
   };
-  page.querySelector('#identityResetV1').onclick=()=>{if(!confirm('استعادة الهوية والألوان والصور الأصلية؟ تصميمات الروسيات ستبقى كما هي.'))return;const fresh=defaults();state.brand=fresh.brand;state.theme=fresh.theme;state.images=fresh.images;persist();renderIdentity();};
+  page.querySelector('#identityResetV1').onclick=()=>{if(!confirm('استعادة الهوية والألوان والصور الأصلية؟ تصميمات الروسيات ستبقى كما هي.'))return;const fresh=defaults();state.brand=fresh.brand;state.navigation=fresh.navigation;state.theme=fresh.theme;state.images=fresh.images;persist();renderIdentity();};
 }
 function updateElementSpec(draft,path,node,{content=false}={}){
   if(path===null||path===undefined)return;
