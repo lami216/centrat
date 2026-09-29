@@ -43,7 +43,7 @@ async function verifyPersistenceCompletes(){
     security:{users:[{id:'user-1',username:'Admin'}]},
     centerOpsMeta:{updatedAt:123456789,version:13}
   }));
-  values.set('efc-students-v1',JSON.stringify([{id:'student-1',name:'Test',payments:[]} ]));
+  values.set('centrat-students-v1',JSON.stringify([{id:'student-1',name:'Test',payments:[]} ]));
   window.EFC_CORE_CHANGED();
   await new Promise(resolve=>setTimeout(resolve,180));
   await Promise.race([
