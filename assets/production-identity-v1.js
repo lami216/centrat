@@ -3,7 +3,7 @@
 if(window.EFC_IDENTITY_V1?.ready)return;
 if(!window.EFC_FOUNDATION_V13?.ready)throw new Error('Identity v1 loaded before foundation.');
 
-const KEY='efc-identity-v1';
+const KEY='centrat-identity-v1';
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 const clone=value=>{try{return structuredClone(value);}catch{return JSON.parse(JSON.stringify(value));}};
 const defaults=()=>({
