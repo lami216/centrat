@@ -70,6 +70,11 @@ function dataUrl(file){
     const reader=new FileReader();reader.onload=()=>resolve(String(reader.result||''));reader.onerror=()=>reject(new Error('تعذر قراءة الصورة.'));reader.readAsDataURL(file);
   });
 }
+function dataUrlBytes(value){
+  const text=String(value||''),comma=text.indexOf(',');if(comma<0)return null;
+  const meta=text.slice(0,comma),body=text.slice(comma+1),binary=/;base64/i.test(meta)?atob(body):decodeURIComponent(body),bytes=new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);return bytes;
+}
 function getByPath(root,path){
   if(!root||path===null||path===undefined||path==='')return root;
   let node=root;for(const raw of String(path).split('.')){const index=Number(raw);if(!Number.isInteger(index)||index<0||!node?.children?.[index])return null;node=node.children[index];}
@@ -156,7 +161,7 @@ function applyIdentity(){
   document.querySelectorAll('.shell-v13 .brand small').forEach(node=>node.textContent=b.sidebarSubtitle||'');
   document.querySelectorAll('.efc-home-v35 img').forEach(img=>img.src=home);
   document.querySelectorAll('.efc-home-v35 h1').forEach(node=>node.textContent=b.appName||'');
-  try{const win=window.__TAURI__?.window?.getCurrentWindow?.();if(win?.setTitle)Promise.resolve(win.setTitle(b.appName||'')).catch(()=>{});if(state.images.appIcon&&win?.setIcon)Promise.resolve(win.setIcon(state.images.appIcon)).catch(()=>{});}catch{}
+  try{const win=window.__TAURI__?.window?.getCurrentWindow?.();if(win?.setTitle)Promise.resolve(win.setTitle(b.appName||'')).catch(()=>{});if(state.images.appIcon&&win?.setIcon){const bytes=dataUrlBytes(state.images.appIcon);if(bytes)Promise.resolve(win.setIcon(bytes)).catch(()=>{});}}catch{}
 }
 window.EFC_APPLY_IDENTITY_V1=applyIdentity;
 
@@ -171,14 +176,14 @@ const pageStyle=document.createElement('style');pageStyle.textContent=`
 `;document.head.appendChild(pageStyle);
 
 function imageRow(key,label,fallback){
-  const src=state.images[key]||fallback||'./efc-logo.svg';
-  return `<div class="identity-image-row-v1" data-image-key="${key}"><img src="${esc(src)}" alt=""><div><b>${esc(label)}</b><small style="display:block;color:#71817b;margin-top:4px">PNG / JPG / WEBP / SVG حتى 5MB</small></div><div><label class="button secondary" style="display:inline-flex;align-items:center;cursor:pointer">اختيار<input type="file" accept="image/*" hidden></label><button type="button" class="button secondary clear-image-v1">إزالة</button></div></div>`;
+  const src=state.images[key]||fallback||'./efc-logo.svg',icon=key==='appIcon',accept=icon?'image/png,image/x-icon,.png,.ico':'image/*',hint=icon?'PNG أو ICO حتى 5MB':'PNG / JPG / WEBP / SVG حتى 5MB';
+  return `<div class="identity-image-row-v1" data-image-key="${key}"><img src="${esc(src)}" alt=""><div><b>${esc(label)}</b><small style="display:block;color:#71817b;margin-top:4px">${hint}</small></div><div><label class="button secondary" style="display:inline-flex;align-items:center;cursor:pointer">اختيار<input type="file" accept="${accept}" hidden></label><button type="button" class="button secondary clear-image-v1">إزالة</button></div></div>`;
 }
 function globalPanel(){
   const b=state.brand,t=state.theme;
   const field=(key,label)=>`<label>${label}<input type="text" name="${key}" value="${esc(b[key]||'')}"></label>`;
   const color=(key,label)=>`<label>${label}<input type="color" name="${key}" value="${esc(t[key]||'#000000')}"></label>`;
-  return `<div class="identity-grid-v1"><section class="identity-card-v1"><h2>اسم وهوية التطبيق</h2><div class="fields">${field('appName','اسم التطبيق')}${field('line1','السطر الأول في أعلى القائمة')}${field('line2','السطر الثاني في أعلى القائمة')}${field('sidebarSubtitle','الوصف تحت الاسم')}${field('receiptCenterEn','اسم المركز بالفرنسية في الروسي')}${field('receiptCenterAr','اسم المركز بالعربية في الروسي')}${field('receiptOfficial','الوصف الرسمي في الروسي')}${field('receiptTag','السطر التعريفي في الروسي')}${field('phone','الهاتف')}${field('whatsapp','واتساب')}${field('teacher','اسم المسؤول / فيسبوك')}</div></section><section class="identity-card-v1"><h2>الألوان</h2><div class="identity-color-grid-v1">${color('primary','اللون الرئيسي')}${color('primaryDark','لون القائمة')}${color('accent','لون التحديد')}${color('page','خلفية الصفحات')}${color('card','البطاقات')}${color('text','النص الرئيسي')}${color('muted','النص الثانوي')}${color('success','النجاح')}${color('danger','التنبيه')}${color('warning','التحذير')}</div></section><section class="identity-card-v1" style="grid-column:1/-1"><h2>الصور والأيقونات</h2>${imageRow('logo','شعار المركز','./efc-logo.svg')}${imageRow('home','صورة الصفحة الرئيسية',state.images.logo||'./efc-logo.svg')}${imageRow('appIcon','أيقونة التطبيق',state.images.logo||'./efc-logo.svg')}<div class="identity-help-v1">أيقونة التطبيق تُطبّق داخل الواجهة والنافذة عندما يسمح نظام التشغيل بذلك. أيقونة ملف التثبيت نفسه تبقى مرتبطة بعملية البناء، لذلك تُستخدم الصورة المحفوظة كأساس للهوية داخل التطبيق.</div><div class="identity-actions-v1"><button class="button" id="identitySaveV1">حفظ الهوية</button><button class="button secondary" id="identityResetV1">استعادة القيم الأصلية</button></div></section></div>`;
+  return `<div class="identity-grid-v1"><section class="identity-card-v1"><h2>اسم وهوية التطبيق</h2><div class="fields">${field('appName','اسم التطبيق')}${field('line1','السطر الأول في أعلى القائمة')}${field('line2','السطر الثاني في أعلى القائمة')}${field('sidebarSubtitle','الوصف تحت الاسم')}${field('receiptCenterEn','اسم المركز بالفرنسية في الروسي')}${field('receiptCenterAr','اسم المركز بالعربية في الروسي')}${field('receiptOfficial','الوصف الرسمي في الروسي')}${field('receiptTag','السطر التعريفي في الروسي')}${field('phone','الهاتف')}${field('whatsapp','واتساب')}${field('teacher','اسم المسؤول / فيسبوك')}</div></section><section class="identity-card-v1"><h2>الألوان</h2><div class="identity-color-grid-v1">${color('primary','اللون الرئيسي')}${color('primaryDark','لون القائمة')}${color('accent','لون التحديد')}${color('page','خلفية الصفحات')}${color('card','البطاقات')}${color('text','النص الرئيسي')}${color('muted','النص الثانوي')}${color('success','النجاح')}${color('danger','التنبيه')}${color('warning','التحذير')}</div></section><section class="identity-card-v1" style="grid-column:1/-1"><h2>الصور والأيقونات</h2>${imageRow('logo','شعار المركز','./efc-logo.svg')}${imageRow('home','صورة الصفحة الرئيسية',state.images.logo||'./efc-logo.svg')}${imageRow('appIcon','أيقونة التطبيق',state.images.logo||'./efc-logo.svg')}<div class="identity-help-v1">أيقونة التطبيق تغيّر أيقونة نافذة البرنامج أثناء التشغيل مع الاسم في شريط العنوان. أيقونة ملف EXE وملف التثبيت نفسه تُحسم وقت البناء، لذلك لا يمكن تبديلها من داخل برنامج مُثبت بدون إعادة بناء النسخة.</div><div class="identity-actions-v1"><button class="button" id="identitySaveV1">حفظ الهوية</button><button class="button secondary" id="identityResetV1">استعادة القيم الأصلية</button></div></section></div>`;
 }
 function receiptsPanel(){
   const items=[...receiptRegistry.values()];
@@ -188,7 +193,7 @@ function bindGlobal(){
   const page=document.querySelector('.identity-page-v1');if(!page)return;
   page.querySelectorAll('[data-image-key]').forEach(row=>{
     const key=row.dataset.imageKey,file=row.querySelector('input[type="file"]'),img=row.querySelector('img');
-    file.onchange=async()=>{try{const value=await dataUrl(file.files?.[0]);state.images[key]=value;img.src=value||'./efc-logo.svg';}catch(error){alert(error.message);}};
+    file.onchange=async()=>{try{const selected=file.files?.[0];if(key==='appIcon'&&selected&&!/\.(png|ico)$/i.test(selected.name||''))throw new Error('أيقونة التطبيق يجب أن تكون PNG أو ICO.');const value=await dataUrl(selected);state.images[key]=value;img.src=value||'./efc-logo.svg';}catch(error){alert(error.message);file.value='';}};
     row.querySelector('.clear-image-v1').onclick=()=>{state.images[key]='';img.src=key==='home'?(state.images.logo||'./efc-logo.svg'):'./efc-logo.svg';};
   });
   page.querySelector('#identitySaveV1').onclick=()=>{
@@ -261,5 +266,5 @@ function renderIdentity(){
 window.EFC_RENDER_IDENTITY_V1=renderIdentity;
 
 applyIdentity();
-window.EFC_IDENTITY_V1=Object.freeze({ready:true,persistentIdentity:true,globalBrandEditor:true,themeEditor:true,imageEditor:true,receiptDesigner:true,perReceiptType:true,backupIntegrated:true,noRenderWrapper:true});
+window.EFC_IDENTITY_V1=Object.freeze({ready:true,persistentIdentity:true,globalBrandEditor:true,themeEditor:true,imageEditor:true,runtimeWindowIdentity:true,receiptDesigner:true,perReceiptType:true,backupIntegrated:true,noRenderWrapper:true});
 })();
