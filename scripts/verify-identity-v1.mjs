@@ -1,10 +1,12 @@
 import { readFileSync, readdirSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 
 const read=path=>readFileSync(path,'utf8');
 const need=(text,token,label)=>{if(!text.includes(token))throw new Error(`Missing ${label}: ${token}`);};
 const forbid=(text,token,label)=>{if(text.includes(token))throw new Error(`Forbidden ${label}: ${token}`);};
 
 const identity=read('assets/production-identity-v1.js');
+execFileSync(process.execPath,['--check','assets/production-identity-v1.js'],{stdio:'inherit'});
 const gate=read('assets/production-license-gate-v8.js');
 const build=read('scripts/build-production.mjs');
 const auth=read('assets/production-auth-bootstrap-v13.js');
