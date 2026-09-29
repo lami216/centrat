@@ -64,7 +64,8 @@ requireText(receipt,'noLegacyReceiptChain:true','standalone receipt service');
 requireText(receipt,'noWindowOpenPatch:true','receipt window.open is not intercepted');
 
 for(const obsolete of ['demo-app.js','demo-period-merge.js','demo-monthly-finance-v3.js','production-runtime.js','production-monthly-merge-v2.js','production-student-profile-v3.js','production-registration-receipt-v4.js','production-ledger-finance-ui-v5.js','production-ledger-pdf-v6.js','production-center-ops-v11.js','production-center-ops-v11-fix1.js','production-center-ops-v12.js','production-certificates-v7.js','production-certificate-filters-v8.js'])forbidText(gate,obsolete,`obsolete runtime ${obsolete}`);
-requireText(loader,'efc-demo-v8-payment-methods','legacy payment-method key cleanup');
+forbidText(loader,'efc-demo-v8-payment-methods','Centrat must not touch EFC legacy browser storage');
+requireText(loader,'noEfcStorageMigration:true','Centrat explicitly avoids EFC storage migration');
 requireText(loader,'noRuntimeScriptChain:true','legacy script chain removed');
 requireText(loader,'noStoragePrototypePatch:true','global storage prototype patch removed');
 requireText(finance,'paymentMethodsNoDelete:true','payment methods are stop/reactivate only');
