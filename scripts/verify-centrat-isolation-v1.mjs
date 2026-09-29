@@ -38,6 +38,10 @@ for(const [source,label] of [[main,'main state'],[bank,'bank state'],[cert,'cert
   need(source,'app_data_dir()',`${label} resolves through the app-specific data directory`);
 }
 
+need(license,'const LICENSE_SCHEMA: &str = "centrat-license";','separate Centrat license schema');
+need(license,'const LICENSE_KEY_ID: &str = "centrat-license-v1";','separate Centrat license key id');
+need(license,'const LICENSE_FILE_NAME: &str = "license.centrat-license";','separate Centrat license file extension');
+need(license,'Ok(format!("CTR-{}", groups.join("-")))','separate Centrat device-code prefix');
 need(license,'root.join("Centrat").join("Licensing")','separate LocalAppData licensing directory');
 need(license,'HKCU\\Software\\Centrat\\Licensing\\v1','separate Windows licensing registry root');
 need(license,'mr.centrat.desktop|device-v1|{normalized}','separate device-id namespace');
