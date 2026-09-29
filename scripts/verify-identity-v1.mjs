@@ -21,7 +21,7 @@ const cargo=read('src-tauri/Cargo.toml');
 
 for(const [token,label] of [
   ['EFC_IDENTITY_V1','identity runtime marker'],
-  ["const KEY='efc-identity-v1'","single identity storage key"],
+  ["const KEY='centrat-identity-v1'","single identity storage key"],
   ["EFC_REGISTER_STATE_CONTRIBUTOR?.('identity-v1'","identity backup contributor"],
   ["EFC_REGISTER_RESTORE_CONTRIBUTOR?.('identity-v1'","identity restore contributor"],
   ['EFC_REGISTER_RECEIPT_TEMPLATE_V1','receipt template registry'],
@@ -63,7 +63,7 @@ need(auth,"'identity'","identity permission section");
 need(security,"['identity','الهوية']",'identity security section');
 need(security,"else if(page==='identity')window.EFC_RENDER_IDENTITY_V1?.()",'identity route');
 need(security,'window.EFC_APPLY_IDENTITY_V1?.()','identity reapplied after canonical render');
-need(loader,"identity:'efc-identity-v1'",'identity core state key');
+need(loader,"identity:'centrat-identity-v1'",'identity core state key');
 need(loader,'identityStatePreserved:true','identity native startup preservation marker');
 need(capabilities,'core:window:allow-set-title','runtime window title permission');
 need(capabilities,'core:window:allow-set-icon','runtime window icon permission');
