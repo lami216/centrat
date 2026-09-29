@@ -3,7 +3,7 @@
 if(window.EFC_CERTIFICATES_V13?.ready)return;
 if(!window.EFC_RECEIPTS_V13?.ready||typeof allPayments!=='function'||typeof shell!=='function')throw new Error('Certificates v13 loaded before clean receipt/foundation runtime.');
 
-const STORAGE_KEY='efc-certificate-state-v1';
+const STORAGE_KEY='centrat-certificate-state-v1';
 const CERTIFICATE_SUBTITLE='للغات والمعلوماتية';
 const invoke=window.__TAURI__?.core?.invoke;
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
