@@ -1,4 +1,4 @@
-name: Build EFC Windows Setup
+name: Build Centrat Windows Setup
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout EFC
+      - name: Checkout Centrat
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -36,7 +36,7 @@ jobs:
       - name: Install desktop build tools
         run: npm install --no-audit --no-fund --package-lock=false
 
-      - name: Generate EFC app icons
+      - name: Generate Centrat app icons
         run: npm run icons
 
       - name: Verify production source
@@ -73,21 +73,21 @@ jobs:
           Start-Sleep -Seconds 8
           $process.Refresh()
           if ($process.HasExited) {
-            throw "Centre EFC exited during startup smoke test with code $($process.ExitCode)."
+            throw "Centrat exited during startup smoke test with code $($process.ExitCode)."
           }
           Stop-Process -Id $process.Id -Force
-          Write-Host "Centre EFC stayed alive during the startup smoke test."
+          Write-Host "Centrat stayed alive during the startup smoke test."
 
       - name: Upload Windows Setup
         uses: actions/upload-artifact@v4
         with:
-          name: EFC-Windows-Setup
+          name: Centrat-Windows-Setup
           path: src-tauri/target/release/bundle/nsis/*-setup.exe
           if-no-files-found: error
 
       - name: Upload activation generator
         uses: actions/upload-artifact@v4
         with:
-          name: EFC-License-Generator
+          name: Centrat-License-Generator
           path: tools/license-generator/efc-license-generator.html
           if-no-files-found: error
