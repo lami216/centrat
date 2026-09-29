@@ -6,12 +6,12 @@ if(!window.EFC_RECEIPTS_V13?.ready)throw new Error('EFC domain v13 loaded before
 const OFFICIAL_NAME='مركز EFC للغات والمعلوماتية';
 const GENERAL_EXPENSE='__expense_general__';
 const STORAGE={
-  expenses:'efc-expenses-v11',
-  methods:'efc-payment-method-records-v11',
-  security:'efc-security-v11',
-  recovery:'efc-admin-recovery-pending-v11',
-  meta:'efc-center-ops-meta-v13',
-  expenseSequence:'efc-expense-receipt-sequence-v28'
+  expenses:'centrat-expenses-v11',
+  methods:'centrat-payment-method-records-v11',
+  security:'centrat-security-v11',
+  recovery:'centrat-admin-recovery-pending-v11',
+  meta:'centrat-center-ops-meta-v13',
+  expenseSequence:'centrat-expense-receipt-sequence-v28'
 };
 const invoke=window.__TAURI__?.core?.invoke;
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -72,7 +72,7 @@ function syncActiveMethods(){
   normalizeMethodRecords();
   const active=methodRecords.filter(x=>x.active).map(x=>x.name);
   methods.splice(0,methods.length,...active);
-  localStorage.setItem('efc-payment-methods-v1',JSON.stringify(active));
+  localStorage.setItem('centrat-payment-methods-v1',JSON.stringify(active));
   writeJson(STORAGE.methods,methodRecords);
 }
 normalizeExpenses();
