@@ -73,6 +73,16 @@ for(const token of ['selectStudent(id)','clearStudentSelection()','renderStudent
 requireText(certificates,'state.certificateReceipts=state.certificateReceipts.filter','certificate issue rollback after persistence failure');
 requireText(certificates,"'\"':'&quot;'",'certificate HTML quote escaping');
 forbidText(certificates,'persist().then(renderCertificates)','certificate branch add rerendering and discarding the external form draft');
+requireText(certificates,'externalCertificateBranchDelete:true','external certificate branches can be deleted');
+requireText(certificates,'deletedCertificateBranchHistoryPreserved:true','deleted certificate branches preserve historical receipts');
+requireText(certificates,'deletedCertificateBranchFilterFromReceiptsOnly:true','deleted branch filters are derived only from historical receipts');
+requireText(certificates,'externalCertificateBranchReactivation:true','re-adding a deleted branch reactivates the same branch identity');
+requireText(certificates,'function activeCertificateBranches()','certificate issue dropdown excludes deleted branches');
+requireText(certificates,'function deleteBranch()','certificate branch delete controller');
+requireText(certificates,"branch.deletedAt=Date.now();branch.updatedAt=branch.deletedAt",'certificate branch delete is archived instead of destroying history identity');
+requireText(certificates,"state.certificateReceipts.forEach(receipt=>{const key=certificateBranchKey(receipt)",'certificate filter branch list remains receipt-driven');
+requireText(certificates,'id="certDeleteBranchV13"','external certificate branch delete button');
+
 forbidText(certificates,'new MutationObserver(','certificate renderer observer');
 forbidText(certificates,'activeStudentId','duplicate certificate student state');
 forbidText(certificates,'.click();','visible certificate control forwarding to a hidden control');
