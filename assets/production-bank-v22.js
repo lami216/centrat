@@ -3,7 +3,7 @@
 if(window.EFC_BANK_V22?.ready)return;
 if(!window.EFC_RECEIPTS_V13?.ready||typeof shell!=='function')throw new Error('Bank v22 loaded before receipt/foundation runtime.');
 
-const STORAGE_KEY='efc-bank-state-v22';
+const STORAGE_KEY='centrat-bank-state-v22';
 const invoke=window.__TAURI__?.core?.invoke;
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 const pad2=value=>String(value).padStart(2,'0');
