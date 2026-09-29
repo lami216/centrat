@@ -16,6 +16,8 @@ const receipts=read('assets/production-receipts-v13.js');
 const certificates=read('assets/production-certificates-v13.js');
 const finance=read('assets/production-finance-ui-v13.js');
 const bank=read('assets/production-bank-v22.js');
+const capabilities=read('src-tauri/capabilities/default.json');
+const cargo=read('src-tauri/Cargo.toml');
 
 for(const [token,label] of [
   ['EFC_IDENTITY_V1','identity runtime marker'],
@@ -29,6 +31,7 @@ for(const [token,label] of [
   ['globalBrandEditor:true','brand editor marker'],
   ['themeEditor:true','theme editor marker'],
   ['imageEditor:true','image editor marker'],
+  ['runtimeWindowIdentity:true','native window identity marker'],
   ['receiptDesigner:true','receipt designer marker'],
   ['perReceiptType:true','per receipt-type marker'],
   ['noRenderWrapper:true','identity avoids renderer wrapping'],
@@ -56,6 +59,12 @@ need(security,"else if(page==='identity')window.EFC_RENDER_IDENTITY_V1?.()",'ide
 need(security,'window.EFC_APPLY_IDENTITY_V1?.()','identity reapplied after canonical render');
 need(loader,"identity:'efc-identity-v1'",'identity core state key');
 need(loader,'identityStatePreserved:true','identity native startup preservation marker');
+need(capabilities,'core:window:allow-set-title','runtime window title permission');
+need(capabilities,'core:window:allow-set-icon','runtime window icon permission');
+need(cargo,'image-png','PNG window icon support');
+need(cargo,'image-ico','ICO window icon support');
+need(identity,'dataUrlBytes','window icon byte conversion');
+
 
 const registrations=[
   [receipts,"'registration-receipt','روسي التسجيل'",'registration receipt'],
