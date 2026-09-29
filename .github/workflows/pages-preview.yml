@@ -5,6 +5,7 @@ on:
     branches:
       - fix/accounting-integrity-v21
       - feature/certificate-manager-receipt-bank-v22
+      - feature/identity-editor-v1
   workflow_dispatch:
 
 permissions:
