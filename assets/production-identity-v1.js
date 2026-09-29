@@ -92,7 +92,7 @@ function applyReceiptBrand(root,source=state){
     const spans=title.querySelectorAll(':scope > span');if(spans[0])spans[0].textContent=String(b.receiptCenterEn||'');if(spans[1])spans[1].textContent=String(b.receiptCenterAr||'');
   });
   root.querySelectorAll('.official12').forEach(node=>node.textContent=String(b.receiptOfficial||''));
-  root.querySelectorAll('.tag12').forEach(node=>{if(!node.dataset.efcKeepTag)node.textContent=String(b.receiptTag||'');});
+  root.querySelectorAll('.tag12').forEach(node=>{if(/جميع الشهادات معترف بها من طرف الدولة/.test(node.textContent||''))node.textContent=String(b.receiptTag||'');});
 }
 function decorateReceipt(type,html,source=state){
   const template=document.createElement('template');template.innerHTML=String(html||'').trim();
@@ -106,7 +106,7 @@ function decorateReceipt(type,html,source=state){
     if(spec?.style&&typeof spec.style==='object')Object.assign(node.style,spec.style);
   }
   if(Array.isArray(design.extras)&&design.extras.length){
-    if(root instanceof HTMLElement&&getComputedStyle(root).position==='static')root.style.position='relative';
+    if(root instanceof HTMLElement&&!root.style.position)root.style.position='relative';
     for(const item of design.extras){
       if(!item)continue;
       let node;
@@ -132,12 +132,16 @@ function identityCss(){
 .button:not(.secondary),button.button:not(.secondary){background:var(--efc-id-primary)!important;border-color:var(--efc-id-primary)!important}
 .page-title h1,.settings-hero-v13 h1,.finance-hero-v13 h1,.bank-hero-v22 h1{color:var(--efc-id-text)!important}
 .shell-v13 main{background-color:var(--efc-id-page)!important}
-.card{border-color:color-mix(in srgb,var(--efc-id-primary) 22%,#d7e4df)!important}
+.shell-v13 .card,.modal-card,.receipt-viewer-card-v13,.reminder-viewer-head-v13{background-color:var(--efc-id-card)!important}
+.shell-v13 .card{border-color:color-mix(in srgb,var(--efc-id-primary) 22%,#d7e4df)!important}
+.shell-v13 table thead th,.content .table-wrap thead th{background:var(--efc-id-primary)!important;color:#fff!important}
+.shell-v13 .segmented button.active,.finance-switch-v13 button.active,.cert-mode-v13 button.active,.period-tabs-prod button.active{background:var(--efc-id-primary)!important;color:#fff!important;border-color:var(--efc-id-primary)!important}
+.settings-hero-v13::after,.finance-hero-v13::after,.ledger-hero-v13::after,.bank-hero-v22::after{background:var(--efc-id-accent)!important}
 .badge.good{color:var(--efc-id-success)!important}.badge.bad{color:var(--efc-id-danger)!important}
 `;
 }
 function ensureThemeStyle(){
-  let style=document.getElementById('efc-identity-theme-v1');if(!style){style=document.createElement('style');style.id='efc-identity-theme-v1';document.head.appendChild(style);}style.textContent=identityCss();
+  let style=document.getElementById('efc-identity-theme-v1');if(!style){style=document.createElement('style');style.id='efc-identity-theme-v1';}style.textContent=identityCss();document.head.appendChild(style);
 }
 function ensureFavicon(){
   const href=state.images.appIcon||state.images.logo||'./efc-logo.svg';
@@ -193,17 +197,20 @@ function bindGlobal(){
   };
   page.querySelector('#identityResetV1').onclick=()=>{if(!confirm('استعادة الهوية والألوان والصور الأصلية؟ تصميمات الروسيات ستبقى كما هي.'))return;const fresh=defaults();state.brand=fresh.brand;state.theme=fresh.theme;state.images=fresh.images;persist();renderIdentity();};
 }
-function updateElementSpec(draft,path,node){
+function updateElementSpec(draft,path,node,{content=false}={}){
   if(path===null||path===undefined)return;
   draft.elements=draft.elements||{};const spec=draft.elements[path]||{};
-  spec.html=node.innerHTML;
+  if(content)spec.html=node.innerHTML;
   spec.style={
+    ...(spec.style||{}),
     color:node.style.color||'',
     backgroundColor:node.style.backgroundColor||'',
     fontSize:node.style.fontSize||'',
     fontWeight:node.style.fontWeight||'',
     textAlign:node.style.textAlign||'',
-    transform:node.style.transform||''
+    transform:node.style.transform||'',
+    width:node.style.width||'',
+    display:node.style.display||''
   };
   draft.elements[path]=spec;
 }
@@ -212,7 +219,7 @@ function openReceiptEditor(type){
   let sample;try{sample=item.provider();}catch(error){console.error(error);alert('تعذر تجهيز نموذج الروسي.');return;}
   if(!sample?.html)return alert('هذا الروسي لا يملك نموذج معاينة.');
   const original=receiptDesign(type,state),draft=clone(original),modal=document.createElement('div');modal.className='identity-editor-v1';
-  modal.innerHTML=`<div class="identity-editor-card-v1"><div class="identity-editor-head-v1"><div><b>محرر الروسي — ${esc(item.label)}</b><small style="display:block;color:#6b7b75;margin-top:3px">انقر على أي عنصر ثم عدّله. التعديلات تطبق على نفس نوع الروسي فقط.</small></div><button type="button" class="close">×</button></div><div class="identity-editor-tools-v1"><input type="text" class="edit-text" placeholder="نص العنصر المحدد"><input type="number" class="font-size" min="6" max="72" placeholder="الحجم"><input type="color" class="text-color" value="#111111" title="لون النص"><input type="color" class="bg-color" value="#ffffff" title="الخلفية"><button type="button" class="bold">عريض</button><button type="button" data-align="right">يمين</button><button type="button" data-align="center">وسط</button><button type="button" data-align="left">يسار</button><button type="button" data-move="up">↑</button><button type="button" data-move="down">↓</button><button type="button" data-move="right">→</button><button type="button" data-move="left">←</button><button type="button" class="add-text">＋ نص</button><label style="height:36px;display:inline-flex;align-items:center;border:1px solid #cfdcd7;border-radius:7px;padding:0 10px;background:#fff;font:800 10px Tahoma;cursor:pointer">＋ صورة<input type="file" class="add-image" accept="image/*" hidden></label><button type="button" class="reset">إعادة النموذج</button><button type="button" class="primary save">حفظ</button></div><div class="identity-editor-body-v1"><iframe></iframe></div></div>`;
+  modal.innerHTML=`<div class="identity-editor-card-v1"><div class="identity-editor-head-v1"><div><b>محرر الروسي — ${esc(item.label)}</b><small style="display:block;color:#6b7b75;margin-top:3px">انقر على أي عنصر ثم عدّله. التعديلات تطبق على نفس نوع الروسي فقط.</small></div><button type="button" class="close">×</button></div><div class="identity-editor-tools-v1"><input type="text" class="edit-text" placeholder="نص العنصر المحدد"><input type="number" class="font-size" min="6" max="72" placeholder="الحجم"><input type="number" class="element-width" min="10" max="1000" placeholder="العرض"><input type="color" class="text-color" value="#111111" title="لون النص"><input type="color" class="bg-color" value="#ffffff" title="الخلفية"><button type="button" class="bold">عريض</button><button type="button" data-align="right">يمين</button><button type="button" data-align="center">وسط</button><button type="button" data-align="left">يسار</button><button type="button" data-move="up">↑</button><button type="button" data-move="down">↓</button><button type="button" data-move="right">→</button><button type="button" data-move="left">←</button><button type="button" class="add-text">＋ نص</button><label style="height:36px;display:inline-flex;align-items:center;border:1px solid #cfdcd7;border-radius:7px;padding:0 10px;background:#fff;font:800 10px Tahoma;cursor:pointer">＋ صورة<input type="file" class="add-image" accept="image/*" hidden></label><button type="button" class="delete-element">إخفاء / حذف</button><button type="button" class="reset">إعادة النموذج</button><button type="button" class="primary save">حفظ</button></div><div class="identity-editor-body-v1"><iframe></iframe></div></div>`;
   document.body.appendChild(modal);const frame=modal.querySelector('iframe'),close=()=>modal.remove();modal.querySelector('.close').onclick=close;
   let selected=null,selectedPath=null,moveX=0,moveY=0;
   const render=()=>{
@@ -225,12 +232,13 @@ function openReceiptEditor(type){
     paper.addEventListener('click',event=>{
       event.preventDefault();event.stopPropagation();selected?.classList.remove('efc-identity-selected');selected=event.target instanceof frame.contentWindow.Element?event.target:null;if(!selected||selected===paper)return;selected.classList.add('efc-identity-selected');selectedPath=pathOf(paper,selected);selected.contentEditable='true';modal.querySelector('.edit-text').value=selected.innerText||'';const cs=frame.contentWindow.getComputedStyle(selected);modal.querySelector('.font-size').value=parseFloat(cs.fontSize)||'';modal.querySelector('.text-color').value=rgbToHex(cs.color)||'#111111';moveX=0;moveY=0;
     },true);
-    paper.addEventListener('input',()=>{if(selected&&selectedPath!==null)updateElementSpec(draft,selectedPath,selected);},true);
+    paper.addEventListener('input',()=>{if(selected&&selectedPath!==null)updateElementSpec(draft,selectedPath,selected,{content:true});},true);
   });
   const rgbToHex=value=>{const m=String(value||'').match(/\d+/g);if(!m||m.length<3)return'#111111';return'#'+m.slice(0,3).map(n=>Number(n).toString(16).padStart(2,'0')).join('');};
   const changeSelected=fn=>{if(!selected||selectedPath===null)return alert('اختر عنصرًا من الروسي أولًا.');fn(selected);updateElementSpec(draft,selectedPath,selected);};
-  modal.querySelector('.edit-text').oninput=event=>changeSelected(node=>node.innerText=event.target.value);
+  modal.querySelector('.edit-text').oninput=event=>{if(!selected||selectedPath===null)return;selected.innerText=event.target.value;updateElementSpec(draft,selectedPath,selected,{content:true});};
   modal.querySelector('.font-size').oninput=event=>changeSelected(node=>node.style.fontSize=(Number(event.target.value)||12)+'px');
+  modal.querySelector('.element-width').oninput=event=>changeSelected(node=>node.style.width=(Number(event.target.value)||10)+'px');
   modal.querySelector('.text-color').oninput=event=>changeSelected(node=>node.style.color=event.target.value);
   modal.querySelector('.bg-color').oninput=event=>changeSelected(node=>node.style.backgroundColor=event.target.value);
   modal.querySelector('.bold').onclick=()=>changeSelected(node=>node.style.fontWeight=String(node.style.fontWeight)==='900'?'400':'900');
@@ -238,6 +246,7 @@ function openReceiptEditor(type){
   modal.querySelectorAll('[data-move]').forEach(button=>button.onclick=()=>changeSelected(node=>{if(button.dataset.move==='up')moveY-=4;if(button.dataset.move==='down')moveY+=4;if(button.dataset.move==='right')moveX+=4;if(button.dataset.move==='left')moveX-=4;node.style.transform=`translate(${moveX}px,${moveY}px)`;}));
   modal.querySelector('.add-text').onclick=()=>{draft.extras=draft.extras||[];draft.extras.push({id:'text-'+Date.now(),kind:'text',html:'نص جديد',x:40,y:40,style:{fontSize:'18px',fontWeight:'700',color:'#111111'}});render();};
   modal.querySelector('.add-image').onchange=async event=>{try{const src=await dataUrl(event.target.files?.[0]);if(!src)return;draft.extras=draft.extras||[];draft.extras.push({id:'image-'+Date.now(),kind:'image',src,x:40,y:40,style:{width:'100px',height:'auto',objectFit:'contain'}});render();}catch(error){alert(error.message);}};
+  modal.querySelector('.delete-element').onclick=()=>{if(!selected||selectedPath===null)return alert('اختر عنصرًا أولًا.');const extraId=selected.dataset?.efcIdentityExtra;if(extraId){draft.extras=(draft.extras||[]).filter(item=>String(item.id)!==String(extraId));render();return;}selected.style.display='none';updateElementSpec(draft,selectedPath,selected);};
   modal.querySelector('.reset').onclick=()=>{if(!confirm('إرجاع هذا الروسي إلى تصميمه الأصلي؟'))return;draft.elements={};draft.extras=[];render();};
   modal.querySelector('.save').onclick=()=>{state.receipts[type]=clone(draft);persist();close();alert('تم حفظ تصميم الروسي.');};
   render();
