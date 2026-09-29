@@ -225,12 +225,12 @@ function openReceiptEditor(type){
   const render=()=>{
     const source=clone(state);source.receipts={...source.receipts,[type]:draft};
     const decorated=decorateReceipt(type,sample.html,source);
-    frame.srcdoc=`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><style>${sample.css||''}body{padding:10px!important}.identity-editor-paper{position:relative!important}</style></head><body><div class="identity-editor-paper">${decorated}</div></body></html>`;
+    frame.srcdoc=`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><style>${sample.css||''}body{padding:10px!important}.identity-editor-paper{position:relative!important}.efc-identity-selected{outline:3px solid #2e75d4!important;outline-offset:2px!important;cursor:text!important}</style></head><body><div class="identity-editor-paper">${decorated}</div></body></html>`;
   };
   frame.addEventListener('load',()=>{
     const doc=frame.contentDocument,paper=doc?.querySelector('.identity-editor-paper')?.firstElementChild||doc?.querySelector('.identity-editor-paper');if(!paper)return;
     paper.addEventListener('click',event=>{
-      event.preventDefault();event.stopPropagation();selected?.classList.remove('efc-identity-selected');selected=event.target instanceof frame.contentWindow.Element?event.target:null;if(!selected||selected===paper)return;selected.classList.add('efc-identity-selected');selectedPath=pathOf(paper,selected);selected.contentEditable='true';modal.querySelector('.edit-text').value=selected.innerText||'';const cs=frame.contentWindow.getComputedStyle(selected);modal.querySelector('.font-size').value=parseFloat(cs.fontSize)||'';modal.querySelector('.text-color').value=rgbToHex(cs.color)||'#111111';moveX=0;moveY=0;
+      event.preventDefault();event.stopPropagation();selected?.classList.remove('efc-identity-selected');selected=event.target instanceof frame.contentWindow.Element?event.target:null;if(!selected||selected===paper)return;selected.classList.add('efc-identity-selected');selectedPath=pathOf(paper,selected);selected.contentEditable='true';modal.querySelector('.edit-text').value=selected.innerText||'';const cs=frame.contentWindow.getComputedStyle(selected);modal.querySelector('.font-size').value=parseFloat(cs.fontSize)||'';modal.querySelector('.element-width').value=parseFloat(cs.width)||'';modal.querySelector('.text-color').value=rgbToHex(cs.color)||'#111111';modal.querySelector('.bg-color').value=rgbToHex(cs.backgroundColor)||'#ffffff';moveX=0;moveY=0;
     },true);
     paper.addEventListener('input',()=>{if(selected&&selectedPath!==null)updateElementSpec(draft,selectedPath,selected,{content:true});},true);
   });
