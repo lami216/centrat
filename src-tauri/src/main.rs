@@ -29,7 +29,7 @@ fn app_data_dir(app: &tauri::AppHandle) -> Result<PathBuf, String> {
 }
 
 fn db_path(app: &tauri::AppHandle) -> Result<PathBuf, String> {
-    Ok(app_data_dir(app)?.join("efc-state-v1.sqlite"))
+    Ok(app_data_dir(app)?.join("centrat-state-v1.sqlite"))
 }
 
 fn open_db(app: &tauri::AppHandle) -> Result<Connection, String> {
@@ -150,7 +150,7 @@ fn export_backup(app: tauri::AppHandle, suggested_name: String) -> Result<Option
     let combined = bank_state::merge_into_main_state(&app, &combined)?;
 
     let Some(path) = rfd::FileDialog::new()
-        .add_filter("EFC data backup", &["json"])
+        .add_filter("Centrat data backup", &["json"])
         .set_file_name(&suggested_name)
         .save_file()
     else {
@@ -165,7 +165,7 @@ fn export_backup(app: tauri::AppHandle, suggested_name: String) -> Result<Option
 fn import_backup(app: tauri::AppHandle) -> Result<Option<String>, String> {
     license::require_valid_license()?;
     let Some(path) = rfd::FileDialog::new()
-        .add_filter("EFC data backup", &["json"])
+        .add_filter("Centrat data backup", &["json"])
         .pick_file()
     else {
         return Ok(None);
@@ -205,7 +205,7 @@ fn main() {
             exit_app
         ])
         .build(tauri::generate_context!())
-        .expect("error while building Centre EFC");
+        .expect("error while building Centrat");
 
     app.run(|app_handle, event| {
         if let tauri::RunEvent::WindowEvent { label, event, .. } = event {
