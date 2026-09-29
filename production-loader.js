@@ -3,13 +3,13 @@
 if(window.EFC_CORE_STORAGE_V13?.ready)return;
 
 const KEYS={
-  students:'efc-students-v1',
-  specialties:'efc-specialties-v1',
-  methods:'efc-payment-methods-v1',
-  identity:'efc-identity-v1'
+  students:'centrat-students-v1',
+  specialties:'centrat-specialties-v1',
+  methods:'centrat-payment-methods-v1',
+  identity:'centrat-identity-v1'
 };
-const META_KEY='efc-state-meta-v1';
-const LEGACY_KEYS=['efc-demo-v2-students','efc-demo-v2-specialties','efc-demo-v8-payment-methods'];
+const META_KEY='centrat-state-meta-v1';
+const LEGACY_KEYS=[]; // Centrat never imports or deletes EFC browser storage implicitly.
 const DEFAULT_METHODS=['نقداً','Bankily','Masrvi','السداد'];
 const invoke=window.__TAURI__?.core?.invoke;
 let writeChain=Promise.resolve();
@@ -76,7 +76,7 @@ const ready=(async()=>{
   window.EFC_CORE_CHANGED=()=>{markLocalChange();scheduleCurrentPersist();};
   window.EFC_MERGE_IMPORTED_STATE=async incoming=>{const current=stateFromLocalStorage(),{state:merged,stats}=mergeStates(current,incoming),applied=applyState(merged,{freshTimestamp:true});await persistCoreNow(applied);for(const restore of restoreContributors.values())await restore(incoming);return{state:applied,stats};};
   window.EFC_APPLY_RESTORED_STATE=window.EFC_MERGE_IMPORTED_STATE;
-  window.EFC_CORE_STORAGE_V13=Object.freeze({ready:true,explicitPersistence:true,serializedNativeWrites:true,stateContributors:true,restoreContributors:true,identityStatePreserved:true,noStoragePrototypePatch:true,noRuntimeScriptChain:true,revisionAwareStudentMerge:true,revisionAwarePaymentMerge:true,installationId:activeState.installationId,sourceCenters:activeState.sourceCenters?.length||1});
+  window.EFC_CORE_STORAGE_V13=Object.freeze({ready:true,explicitPersistence:true,serializedNativeWrites:true,stateContributors:true,restoreContributors:true,identityStatePreserved:true,centratStorageNamespace:true,noEfcStorageMigration:true,noStoragePrototypePatch:true,noRuntimeScriptChain:true,revisionAwareStudentMerge:true,revisionAwarePaymentMerge:true,installationId:activeState.installationId,sourceCenters:activeState.sourceCenters?.length||1});
   return window.EFC_CORE_STORAGE_V13;
 })().catch(error=>{console.error('EFC core storage bootstrap failed.',error);throw error;});
 window.EFC_CORE_STORAGE_READY=ready;
