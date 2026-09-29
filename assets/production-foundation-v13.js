@@ -5,7 +5,7 @@ if(!window.EFC_CORE_STORAGE_V13?.ready)throw new Error('Foundation v13 loaded be
 
 const OFFICIAL_NAME='مركز EFC للغات والمعلوماتية';
 const BRAND_TITLE_HTML='<span>مركز EFC</span><span>للغات و المعلوماتية</span>';
-const LS_STUDENTS='efc-students-v1',LS_SPECS='efc-specialties-v1',LS_METHODS='efc-payment-methods-v1';
+const LS_STUDENTS='centrat-students-v1',LS_SPECS='centrat-specialties-v1',LS_METHODS='centrat-payment-methods-v1';
 const parseArray=(key,fallback=[])=>{try{const value=JSON.parse(localStorage.getItem(key)||'null');return Array.isArray(value)?value:fallback;}catch{return fallback;}};
 const pad=value=>String(value).padStart(2,'0');
 const deviceToday=()=>{const d=new Date();return`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;};
