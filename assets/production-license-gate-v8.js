@@ -31,7 +31,7 @@ const RUNTIME=[
 ];
 const BOOTSTRAP_RUNTIME=RUNTIME.slice(0,2);
 const APP_RUNTIME=RUNTIME.slice(2);
-const RUNTIME_VERSION='20260929-certificate-branch-delete-1';
+const RUNTIME_VERSION='20260929-centrat-private-license-v1-1';
 const invoke=window.__TAURI__?.core?.invoke;
 const app=document.getElementById('app');
 let startPromise=null,started=false,watchTimer=null,overlay=null,busy=false,deviceId='';
