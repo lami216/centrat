@@ -7,8 +7,6 @@ const registration=await readFile('assets/production-registration-schedule-v13.j
 const certificateState=await readFile('src-tauri/src/certificate_state.rs','utf8');
 const gate=await readFile('assets/production-license-gate-v8.js','utf8');
 const license=await readFile('src-tauri/src/license.rs','utf8');
-const generator=await readFile('tools/license-generator/efc-license-generator.html','utf8');
-const generatorRust=await readFile('tools/license-generator/src/main.rs','utf8');
 
 new Function(sequence);
 new Function(lifecycle);
@@ -29,7 +27,7 @@ for(const token of [
   'noCertificateDomObserver:true',
   'noCertificateReloadPatch:true',
   'legacyReceiptPrefixesRemoved:true',
-  "const IDENTITY_KEY='efc-identity-sequences-v11'",
+  "const IDENTITY_KEY='centrat-identity-sequences-v11'",
   'generalReceiptNext:1',
   'registrationLastByScope:{}',
   'function allocateRegistrationNumber(branch,specialty)',
@@ -89,11 +87,10 @@ if(!gate.includes("'./assets/production-student-lifecycle-domain-v20.js'"))throw
 if(gate.indexOf('production-receipt-sequences-v10.js')<gate.indexOf('production-certificates-v13.js'))throw new Error('Receipt sequencing must load after native certificates v13.');
 if(gate.indexOf('production-student-lifecycle-domain-v20.js')<gate.indexOf('production-receipt-sequences-v10.js'))throw new Error('Student lifecycle policy must supersede the base sequence only after it is ready.');
 
-const publicKey='BDDLo6mYqhmQbaUyS_xmMkebb3Nz28ZmWU3bF6alhqeXt7mxLrk_pxDc4vaz9RXV5mICatMtADIQvkF4EdLM8LY';
-for(const [name,source] of [['license.rs',license],['HTML generator template',generator],['legacy generator',generatorRust]]){
-  if(!source.includes('efc-license-v3'))throw new Error(`${name} is not on key id v3.`);
-  if(!source.includes(publicKey))throw new Error(`${name} does not use the v3 public key.`);
-}
+const publicKey='BCFnHWzxVE0i_JkbGZcHUMv8HzdYrcLMjeqYtB9TgR4f5l2lPDpLYXsouALXRSZhwF4WPW94n3JIsev3_IvXC6c';
+if(!license.includes('centrat-license-v1'))throw new Error('Native verifier is not on Centrat license key v1.');
+if(!license.includes('centrat-license'))throw new Error('Native verifier is not on the Centrat license schema.');
+if(!license.includes(publicKey))throw new Error('Native verifier does not use the Centrat public key.');
 if(license.includes('BK_2ws4TMDStsDqV7HokicMC814XtpAu00YZtUZ8KYBZfnzVXY0GB0ufHBUp9--5Ixb8DbgNUyoenXAQ3To6shI'))throw new Error('Old v1 public key still present in native verifier.');
 if(license.includes('BAbRmaYeE4aeAI09ADkpDXreSynMo3LY9GTgQti1ava5MPqzOld4EKamVj2pnzAR5h1ypeOVjOQ9fcIEzCzzgr0'))throw new Error('Old v2 public key still present in native verifier.');
 const preparedLicense=license.indexOf('fs::rename(&prepared, &path)');
@@ -101,4 +98,4 @@ const committedLicenseLedger=license.indexOf('persist_ledger(&ledger)',preparedL
 if(preparedLicense<0||committedLicenseLedger<preparedLicense)throw new Error('A license must be installed before its id is committed as consumed, so a file-install failure remains retryable.');
 if(/R-\$\{|S-\$\{/.test(sequence))throw new Error('Receipt v10 must not generate letter-prefixed receipt numbers.');
 
-console.log('V10 checks passed: financial receipts keep permanent high-water identities, student registration numbers use successor-sealed latest-number reuse, certificate edit identity stays locked, backups preserve counters, and license key v3 is consistent.');
+console.log('V10 checks passed: financial receipts keep permanent high-water identities, student registration numbers use successor-sealed latest-number reuse, certificate edit identity stays locked, backups preserve counters, and the Centrat license verifier is on its independent v1 contract.');

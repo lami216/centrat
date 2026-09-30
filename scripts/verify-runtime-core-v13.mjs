@@ -105,17 +105,17 @@ requireText(source.finance,'certificateLedgerReceiptNavigation:true','certificat
 // Backup merge regression: corrections to an existing transaction/student must win only when their revision is newer.
 const mergeStore=new Map();
 const mergeLocalStorage={getItem:key=>mergeStore.has(key)?mergeStore.get(key):null,setItem:(key,value)=>mergeStore.set(key,String(value)),removeItem:key=>mergeStore.delete(key)};
-mergeLocalStorage.setItem('efc-state-meta-v1',JSON.stringify({version:3,updatedAt:200,installationId:'center-local',sourceCenters:['center-local']}));
-mergeLocalStorage.setItem('efc-specialties-v1',JSON.stringify([{id:'quick',recordCode:'spec-quick',sourceCenterId:'center-local',name:'سريعة',courseType:'quick',billing:'one_time',durationUnit:'day',durationValue:30}]));
-mergeLocalStorage.setItem('efc-payment-methods-v1',JSON.stringify(['نقداً','Bankily']));
-mergeLocalStorage.setItem('efc-students-v1',JSON.stringify([{id:'s1',recordCode:'reg-1',sourceCenterId:'center-local',name:'local-old',branch:'main',specialty:'quick',reg:1,start:'2026-09-09',required:1000,paid:1000,updatedAt:200,payments:[['2026-09-09',1000,'نقداً','10:00',100,'old','tx-1',null,7,null,null,200]]}]));
+mergeLocalStorage.setItem('centrat-state-meta-v1',JSON.stringify({version:3,updatedAt:200,installationId:'center-local',sourceCenters:['center-local']}));
+mergeLocalStorage.setItem('centrat-specialties-v1',JSON.stringify([{id:'quick',recordCode:'spec-quick',sourceCenterId:'center-local',name:'سريعة',courseType:'quick',billing:'one_time',durationUnit:'day',durationValue:30}]));
+mergeLocalStorage.setItem('centrat-payment-methods-v1',JSON.stringify(['نقداً','Bankily']));
+mergeLocalStorage.setItem('centrat-students-v1',JSON.stringify([{id:'s1',recordCode:'reg-1',sourceCenterId:'center-local',name:'local-old',branch:'main',specialty:'quick',reg:1,start:'2026-09-09',required:1000,paid:1000,updatedAt:200,payments:[['2026-09-09',1000,'نقداً','10:00',100,'old','tx-1',null,7,null,null,200]]}]));
 const mergeContext={console,Date,setTimeout,clearTimeout,structuredClone,crypto:webcrypto,localStorage:mergeLocalStorage,window:{}};mergeContext.window.window=mergeContext.window;vm.createContext(mergeContext);vm.runInContext(source.loader,mergeContext,{filename:files.loader});await mergeContext.window.EFC_CORE_STORAGE_READY;
 const incomingBase={version:3,updatedAt:300,installationId:'center-import',sourceCenters:['center-import'],specialties:[{id:'quick',recordCode:'spec-quick',sourceCenterId:'center-local',name:'سريعة',courseType:'quick',billing:'one_time',durationUnit:'day',durationValue:30}],paymentMethods:['نقداً','Bankily']};
 await mergeContext.window.EFC_MERGE_IMPORTED_STATE({...incomingBase,students:[{id:'s1-copy',recordCode:'reg-1',sourceCenterId:'center-local',name:'incoming-newer',branch:'center-b',specialty:'quick',reg:1,start:'2026-09-08',required:1300,paid:1200,updatedAt:300,payments:[['2026-09-11',1200,'Bankily','11:00',100,'corrected','tx-1',null,7,null,null,300]]}]});
-let merged=JSON.parse(mergeLocalStorage.getItem('efc-students-v1'))[0];
+let merged=JSON.parse(mergeLocalStorage.getItem('centrat-students-v1'))[0];
 if(merged.name!=='incoming-newer'||merged.branch!=='center-b'||Number(merged.payments[0][1])!==1200||merged.payments[0][2]!=='Bankily')throw new Error('Revision-aware backup merge did not apply the newer corrected student/payment.');
 await mergeContext.window.EFC_MERGE_IMPORTED_STATE({...incomingBase,updatedAt:400,students:[{id:'s1-copy',recordCode:'reg-1',sourceCenterId:'center-local',name:'incoming-older-metadata',branch:'should-not-win',specialty:'quick',reg:1,start:'2026-09-01',required:9999,paid:1300,updatedAt:250,payments:[['2026-09-12',1300,'نقداً','12:00',100,'newer-payment-only','tx-1',null,7,null,null,400]]}]});
-merged=JSON.parse(mergeLocalStorage.getItem('efc-students-v1'))[0];
+merged=JSON.parse(mergeLocalStorage.getItem('centrat-students-v1'))[0];
 if(merged.name!=='incoming-newer'||merged.branch!=='center-b')throw new Error('Older imported student metadata overwrote newer local metadata.');
 if(Number(merged.payments[0][1])!==1300||merged.payments[0][5]!=='newer-payment-only')throw new Error('A newer transaction revision was ignored because the surrounding student metadata was older.');
 
@@ -132,7 +132,7 @@ const context={
   console,Date,setTimeout,clearTimeout,structuredClone,crypto:webcrypto,TextEncoder,TextDecoder,Uint8Array,atob:globalThis.atob,btoa:globalThis.btoa,
   localStorage,students,specialties,methods,DEMO_TODAY:'2026-09-09',dateOnly,iso,addDuration,
   spec:id=>specialties.find(item=>item.id===id),branchName:id=>id,
-  saveStudents:()=>localStorage.setItem('efc-students-v1',JSON.stringify(students)),saveSpecs:()=>localStorage.setItem('efc-specialties-v1',JSON.stringify(specialties)),
+  saveStudents:()=>localStorage.setItem('centrat-students-v1',JSON.stringify(students)),saveSpecs:()=>localStorage.setItem('centrat-specialties-v1',JSON.stringify(specialties)),
   remainingOf:student=>Math.max(0,Number(student.required||0)-Number(student.paid||0)),courseStatus:()=> 'نشطة',financialStatus:()=> 'لم يدفع',
   installmentPlanV3:()=>[],monthlyFocusV3:()=>null,dueNowV3:student=>Math.max(0,Number(student.required||0)-Number(student.paid||0)),suggestedPaymentV3:student=>Math.max(0,Number(student.required||0)-Number(student.paid||0)),allocV4:()=>({desc:'',before:0,after:0,months:[]}),
   receiptModelV4:(student,index)=>index===null?{amount:0,remaining:student.required}:{amount:Number(student.payments[index][1]),remaining:Math.max(0,student.required-Number(student.payments[index][1]))},

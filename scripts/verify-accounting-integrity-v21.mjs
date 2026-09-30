@@ -36,7 +36,7 @@ for(const [token,label] of [
 ])requireText(runtime,token,label);
 
 function makeContext({expenses=[],branches=[],integrityState={}}={}){
-  const storage=new Map([['efc-accounting-integrity-v21',JSON.stringify(integrityState)]]),savedExpenses=expenses.map(value=>({...value}));
+  const storage=new Map([['centrat-accounting-integrity-v21',JSON.stringify(integrityState)]]),savedExpenses=expenses.map(value=>({...value}));
   const document={addEventListener(){},querySelector(){return null;},querySelectorAll(){return[];},getElementById(){return null;}};
   const window={
     EFC_FISCAL_V14:{ready:true,lockedThrough:()=> '2026-09-15',isDateClosed:value=>String(value||'')<='2026-09-15'},

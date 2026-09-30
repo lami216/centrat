@@ -5,7 +5,7 @@ const D=window.EFC_DOMAIN_V13;
 if(!D?.ready||!window.EFC_CERTIFICATES_V13?.ready)throw new Error('Fiscal v14 loaded before the current EFC domain/certificate runtime.');
 
 const invoke=window.__TAURI__?.core?.invoke;
-const STORAGE_KEY='efc-fiscal-state-v14';
+const STORAGE_KEY='centrat-fiscal-state-v14';
 const VERSION=14;
 const {esc,today,cash,showDate,remainingAmount,expenseSpecialtyName}=D;
 let state={version:VERSION,config:null,archives:[],pendingClose:null,updatedAt:0};

@@ -64,7 +64,8 @@ requireText(receipt,'noLegacyReceiptChain:true','standalone receipt service');
 requireText(receipt,'noWindowOpenPatch:true','receipt window.open is not intercepted');
 
 for(const obsolete of ['demo-app.js','demo-period-merge.js','demo-monthly-finance-v3.js','production-runtime.js','production-monthly-merge-v2.js','production-student-profile-v3.js','production-registration-receipt-v4.js','production-ledger-finance-ui-v5.js','production-ledger-pdf-v6.js','production-center-ops-v11.js','production-center-ops-v11-fix1.js','production-center-ops-v12.js','production-certificates-v7.js','production-certificate-filters-v8.js'])forbidText(gate,obsolete,`obsolete runtime ${obsolete}`);
-requireText(loader,'efc-demo-v8-payment-methods','legacy payment-method key cleanup');
+forbidText(loader,'efc-demo-v8-payment-methods','Centrat must not touch EFC legacy browser storage');
+requireText(loader,'noEfcStorageMigration:true','Centrat explicitly avoids EFC storage migration');
 requireText(loader,'noRuntimeScriptChain:true','legacy script chain removed');
 requireText(loader,'noStoragePrototypePatch:true','global storage prototype patch removed');
 requireText(finance,'paymentMethodsNoDelete:true','payment methods are stop/reactivate only');
@@ -97,9 +98,9 @@ const specialties=[
 ];
 const methods=['نقداً'];
 const store=new Map([
-  ['efc-expenses-v11',JSON.stringify([{id:'exp-old',name:'طابعة',amount:250,method:'نقداً',branch:'main',specialty:'__expense_general__',date:'2026-09-09',time:'08:30',createdAt:1788942600000}])],
-  ['efc-payment-method-records-v11',JSON.stringify([{id:'cash',name:'نقداً',active:true,createdAt:1},{id:'bankily',name:'Bankily',active:false,createdAt:2}])],
-  ['efc-security-v11',JSON.stringify({users:[{id:'admin-old',username:'admin',role:'admin',permissions:{},pin:{salt:'old',hash:'old'}}]})]
+  ['centrat-expenses-v11',JSON.stringify([{id:'exp-old',name:'طابعة',amount:250,method:'نقداً',branch:'main',specialty:'__expense_general__',date:'2026-09-09',time:'08:30',createdAt:1788942600000}])],
+  ['centrat-payment-method-records-v11',JSON.stringify([{id:'cash',name:'نقداً',active:true,createdAt:1},{id:'bankily',name:'Bankily',active:false,createdAt:2}])],
+  ['centrat-security-v11',JSON.stringify({users:[{id:'admin-old',username:'admin',role:'admin',permissions:{},pin:{salt:'old',hash:'old'}}]})]
 ]);
 const localStorage={getItem:key=>store.has(key)?store.get(key):null,setItem:(key,value)=>store.set(key,String(value)),removeItem:key=>store.delete(key)};
 const dateOnly=value=>new Date(`${value}T12:00:00`);
@@ -113,7 +114,7 @@ const context={
   console,Date,setTimeout,clearTimeout,structuredClone,crypto:webcrypto,TextEncoder,TextDecoder,Uint8Array,atob:globalThis.atob,btoa:globalThis.btoa,
   localStorage,students,specialties,methods,DEMO_TODAY:'2026-09-09',dateOnly,iso,addDuration,money,fmtDate,
   spec:id=>specialties.find(item=>item.id===id),branchName:id=>id,
-  saveStudents:()=>localStorage.setItem('efc-students-v1',JSON.stringify(students)),saveSpecs:()=>localStorage.setItem('efc-specialties-v1',JSON.stringify(specialties)),
+  saveStudents:()=>localStorage.setItem('centrat-students-v1',JSON.stringify(students)),saveSpecs:()=>localStorage.setItem('centrat-specialties-v1',JSON.stringify(specialties)),
   remainingOf:student=>Math.max(0,Number(student.required||0)-Number(student.paid||0)),courseStatus:student=>student.active===false?'موقوف':'نشطة',financialStatus:student=>Math.max(0,Number(student.required||0)-Number(student.paid||0))?'دفع جزئي':'مدفوع كامل',
   installmentPlanV3:()=>[],monthlyFocusV3:()=>null,dueNowV3:student=>Math.max(0,Number(student.required||0)-Number(student.paid||0)),suggestedPaymentV3:student=>Math.max(0,Number(student.required||0)-Number(student.paid||0)),allocV4:()=>({desc:'',before:0,after:0,months:[]}),
   receiptModelV4:(student,index)=>index===null?{amount:0,remaining:student.required}:{amount:Number(student.payments[index][1]),remaining:Math.max(0,student.required-Number(student.payments[index][1]))},

@@ -16,7 +16,7 @@ fn app_data_dir(app: &tauri::AppHandle) -> Result<PathBuf, String> {
 }
 
 fn open_db(app: &tauri::AppHandle) -> Result<Connection, String> {
-    let conn = Connection::open(app_data_dir(app)?.join("efc-state-v1.sqlite"))
+    let conn = Connection::open(app_data_dir(app)?.join("centrat-state-v1.sqlite"))
         .map_err(|e| format!("تعذر فتح قاعدة البيانات: {e}"))?;
     conn.execute_batch(
         "PRAGMA journal_mode=WAL;

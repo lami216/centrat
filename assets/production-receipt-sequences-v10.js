@@ -4,7 +4,7 @@
 
   const GENERAL_MARKER='efc-general-receipt-sequence-v10';
   const CERT_MARKER='efc-certificate-receipt-sequence-v10';
-  const IDENTITY_KEY='efc-identity-sequences-v11';
+  const IDENTITY_KEY='centrat-identity-sequences-v11';
   const invoke=window.__TAURI__?.core?.invoke;
   let starting=false;
   let identityState={version:11,generalReceiptNext:1,registrationLastByScope:{},updatedAt:0};

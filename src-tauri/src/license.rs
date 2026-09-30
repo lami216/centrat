@@ -16,18 +16,18 @@ use std::{
 #[cfg(windows)]
 use std::os::windows::process::CommandExt;
 
-const LICENSE_SCHEMA: &str = "efc-license";
+const LICENSE_SCHEMA: &str = "centrat-license";
 const LICENSE_VERSION: u8 = 1;
-const LICENSE_KEY_ID: &str = "efc-license-v3";
+const LICENSE_KEY_ID: &str = "centrat-license-v1";
 const LICENSE_ALGORITHM: &str = "ECDSA_P256_SHA256";
-const LICENSE_FILE_NAME: &str = "license.efc-license";
+const LICENSE_FILE_NAME: &str = "license.centrat-license";
 const STATE_FILE_NAME: &str = "state-v1.json";
-const STATE_FORMAT: &str = "efc-license-state-v1";
-const REGISTRY_KEY: &str = r"HKCU\Software\Centre EFC\Licensing\v1";
+const STATE_FORMAT: &str = "centrat-license-state-v1";
+const REGISTRY_KEY: &str = r"HKCU\Software\Centrat\Licensing\v1";
 const REGISTRY_VALUE: &str = "State";
 const ROLLBACK_TOLERANCE_MS: u64 = 120_000;
 const MAX_LICENSE_BYTES: usize = 64 * 1024;
-const PUBLIC_KEY_SEC1_B64: &str = "BDDLo6mYqhmQbaUyS_xmMkebb3Nz28ZmWU3bF6alhqeXt7mxLrk_pxDc4vaz9RXV5mICatMtADIQvkF4EdLM8LY";
+const PUBLIC_KEY_SEC1_B64: &str = "BCFnHWzxVE0i_JkbGZcHUMv8HzdYrcLMjeqYtB9TgR4f5l2lPDpLYXsouALXRSZhwF4WPW94n3JIsev3_IvXC6c";
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -133,7 +133,7 @@ fn licensing_dir() -> Result<PathBuf, String> {
     let root = env::var_os("LOCALAPPDATA")
         .map(PathBuf::from)
         .ok_or_else(|| "تعذر تحديد مجلد بيانات Windows المحلي.".to_string())?;
-    let dir = root.join("Centre-EFC").join("Licensing");
+    let dir = root.join("Centrat").join("Licensing");
     fs::create_dir_all(&dir).map_err(|e| format!("تعذر إنشاء مجلد التفعيل: {e}"))?;
     Ok(dir)
 }
@@ -193,7 +193,7 @@ fn format_device_code(guid: &str) -> Result<String, String> {
     if normalized.is_empty() {
         return Err("تعذر استخراج رقم الجهاز. تواصل مع الدعم.".to_string());
     }
-    let digest = Sha256::digest(format!("mr.efc.centre|device-v1|{normalized}"));
+    let digest = Sha256::digest(format!("mr.centrat.desktop|device-v1|{normalized}"));
     let hex = digest[..10]
         .iter()
         .map(|byte| format!("{byte:02X}"))
@@ -201,7 +201,7 @@ fn format_device_code(guid: &str) -> Result<String, String> {
     let groups = (0..5)
         .map(|index| &hex[index * 4..index * 4 + 4])
         .collect::<Vec<_>>();
-    Ok(format!("EFC-{}", groups.join("-")))
+    Ok(format!("CTR-{}", groups.join("-")))
 }
 
 pub fn device_id() -> Result<String, String> {
@@ -211,7 +211,7 @@ pub fn device_id() -> Result<String, String> {
 fn valid_device_code(value: &str) -> bool {
     let parts = value.split('-').collect::<Vec<_>>();
     parts.len() == 6
-        && parts[0] == "EFC"
+        && parts[0] == "CTR"
         && parts[1..]
             .iter()
             .all(|part| part.len() == 4 && part.chars().all(|ch| ch.is_ascii_hexdigit()))
@@ -280,7 +280,7 @@ fn empty_ledger(device: &str) -> Ledger {
 }
 
 fn state_key(device: &str) -> Vec<u8> {
-    Sha256::digest(format!("Centre-EFC|licensing-state-v1|{device}"))
+    Sha256::digest(format!("Centrat|licensing-state-v1|{device}"))
         .to_vec()
 }
 
@@ -634,7 +634,10 @@ pub fn get_license_status() -> Result<LicenseStatus, String> {
 
 #[tauri::command]
 pub fn install_license_file() -> Result<Option<LicenseInfo>, String> {
-    let Some(path) = rfd::FileDialog::new().pick_file() else {
+    let Some(path) = rfd::FileDialog::new()
+        .add_filter("Centrat license", &["centrat-license"])
+        .pick_file()
+    else {
         return Ok(None);
     };
     let bytes = fs::read(&path).map_err(|e| format!("تعذر قراءة ملف التفعيل: {e}"))?;
@@ -664,8 +667,8 @@ mod tests {
 
     #[test]
     fn signed_fixture_verifies_and_mutation_fails() {
-        let raw = br#"{"schema":"efc-license","version":1,"keyId":"efc-license-v3","algorithm":"ECDSA_P256_SHA256","payload":{"licenseId":"EFC-TEST-FIXTURE","customerName":"Test Customer","centerName":"Test Center","deviceId":"EFC-1111-2222-3333-4444-5555","edition":"desktop","type":"perpetual","durationSeconds":null,"activationMode":"single-install","notes":"fixture"},"signature":"GWpBSl2Uos5_3b9RCzEy1hkILCaHWtHLIcAAd5PcwwTdOEZ4qtzoUgTy7Wd6HoHleBKnLJjFNQx_QsMQLXjRtA"}"#;
-        let device = "EFC-1111-2222-3333-4444-5555";
+        let raw = br#"{"schema":"centrat-license","version":1,"keyId":"centrat-license-v1","algorithm":"ECDSA_P256_SHA256","payload":{"licenseId":"CTR-TEST-FIXTURE","customerName":"Test Customer","centerName":"Test Center","deviceId":"CTR-1111-2222-3333-4444-5555","edition":"desktop","type":"perpetual","durationSeconds":null,"activationMode":"single-install","notes":"fixture"},"signature":"So2hupNv_JRNERrjwJ0WAwAxWM_88ENzb19lNDmzYP2P49S3zeSdtr8KV_igOqIpOo3-3zFoP6WOs2OP8Cy9eg"}"#;
+        let device = "CTR-1111-2222-3333-4444-5555";
         assert!(parse_and_verify(raw, device).is_ok());
         let changed = String::from_utf8(raw.to_vec())
             .unwrap()

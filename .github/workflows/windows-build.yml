@@ -1,19 +1,23 @@
-name: Build EFC Windows Setup
+name: Build Centrat Windows Setup
 
 on:
   push:
-    branches: [main, redesign/efc-ui-2026, refactor/legacy-extraction-v13, fix/v13-user-feedback-2026-09-09, feature/fiscal-year-current-v14, fix/student-lifecycle-numbering-v20, fix/accounting-integrity-v21, feature/certificate-manager-receipt-bank-v22]
+    branches: [main, redesign/efc-ui-2026, refactor/legacy-extraction-v13, fix/v13-user-feedback-2026-09-09, feature/fiscal-year-current-v14, fix/student-lifecycle-numbering-v20, fix/accounting-integrity-v21, feature/certificate-manager-receipt-bank-v22, feature/identity-editor-v1]
   workflow_dispatch:
 
 permissions:
   contents: read
+
+concurrency:
+  group: centrat-windows-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout EFC
+      - name: Checkout Centrat
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -32,27 +36,17 @@ jobs:
       - name: Install desktop build tools
         run: npm install --no-audit --no-fund --package-lock=false
 
-      - name: Generate EFC app icons
+      - name: Generate Centrat app icons
         run: npm run icons
 
       - name: Verify production source
         run: npm run check
 
-      - name: Verify HTML activation generator
+      - name: Verify Centrat license contract
         run: node scripts/verify-license-generator-html.mjs
 
       - name: Build frontend
         run: npm run build
-
-      - name: Build legacy activation generator compatibility check
-        run: cargo build --manifest-path tools/license-generator/Cargo.toml --release
-
-      - name: Verify legacy activation generator compatibility output
-        shell: pwsh
-        run: |
-          if (!(Test-Path "tools/license-generator/target/release/efc-license-generator.exe")) {
-            throw "Legacy generator compatibility binary was not produced."
-          }
 
       - name: Build Windows installer
         run: npm run tauri build -- --bundles nsis
@@ -69,21 +63,15 @@ jobs:
           Start-Sleep -Seconds 8
           $process.Refresh()
           if ($process.HasExited) {
-            throw "Centre EFC exited during startup smoke test with code $($process.ExitCode)."
+            throw "Centrat exited during startup smoke test with code $($process.ExitCode)."
           }
           Stop-Process -Id $process.Id -Force
-          Write-Host "Centre EFC stayed alive during the startup smoke test."
+          Write-Host "Centrat stayed alive during the startup smoke test."
 
       - name: Upload Windows Setup
         uses: actions/upload-artifact@v4
         with:
-          name: EFC-Windows-Setup
+          name: Centrat-Windows-Setup
           path: src-tauri/target/release/bundle/nsis/*-setup.exe
           if-no-files-found: error
 
-      - name: Upload activation generator
-        uses: actions/upload-artifact@v4
-        with:
-          name: EFC-License-Generator
-          path: tools/license-generator/efc-license-generator.html
-          if-no-files-found: error

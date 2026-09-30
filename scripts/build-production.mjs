@@ -14,6 +14,7 @@ const runtimeFiles = [
   'efc-logo.svg',
   'assets/production-license-gate-v8.js',
   'assets/production-foundation-v13.js',
+  'assets/production-identity-v1.js',
   'assets/production-receipts-v13.js',
   'assets/production-certificates-v13.js',
   'assets/production-domain-v13.js',
